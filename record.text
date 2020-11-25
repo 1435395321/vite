@@ -1,0 +1,16 @@
+# 路由
+to:跳转  tag：自定义标签 active-class：动态绑定class
+
+// 常用这个标准跳转
+router.push({name:'Detail',params:{myid:id}})  接收 console.log(router.param.value)
+// 3 JQery传参
+router.push((`/detail?id=${id}`)) 接收 console.log(router.query)
+# 路由拦截
+router.beforeEach((to, from, next) => {
+    let auth = ['/cart','/order','/address','/cinema'];  //需要验证的路由
+    if(auth.includes(to.fullPath)) {
+        console.log('需要验证，返回登录页,这是逻辑块');
+    } else {
+        next();
+    }
+})
