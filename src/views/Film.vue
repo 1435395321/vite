@@ -17,12 +17,6 @@ export default {
         Pager
     },
     setup() {
-        const hangl = () => {
-            Notify({ type: "primary", message: "提示语" });
-        };
-        return {
-            hangl,
-        };
     },
 };
 </script>

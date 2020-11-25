@@ -1,12 +1,18 @@
 <template>
-    <ul>
-      <!--<router-link to="/film/comingsong" active-class="active-li"
-            >正在热映</router-link
-        >
-        <router-link to="/film/noplaying" active-class="active-li"
-            >即将上映</router-link
-        >-->
-    </ul>
+    <div class="home-header">
+        <ul>
+            <li>
+                <router-link to="/film/comingsong" active-class="active-li"
+                    >正在热映</router-link
+                >
+            </li>
+            <li>
+                <router-link to="/film/noplaying" active-class="active-li"
+                    >即将上映</router-link
+                >
+            </li>
+        </ul>
+    </div>
 </template>
 
 <script>
@@ -16,9 +22,26 @@ export default {
 </script>
 
 <style scope lang="scss">
-
+.home-header{
+    width: 100%;
+    ul{
+        width: 100%;
+        margin: 0 auto;
+        display: flex;
+        li{
+            flex:1;
+            text-align: center;
+            a{
+                width: 40%;
+                display: block;
+                line-height: 40px;
+                margin: auto;
+            }
+        }
+    }
+}
 .active-li {
-    color: #22e7ee;
-    border-bottom: 2px solid #22e7ee;
+    color: #ff5f16;
+    border-bottom: 2px solid #ff5f16;
 }
 </style>
