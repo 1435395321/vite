@@ -22,16 +22,22 @@ export default {
 </script>
 
 <style scope lang="scss">
-.home-header{
+.home-header {
     width: 100%;
-    ul{
+    position: sticky;
+    top: 0px;
+    background: #fff !important;
+    z-index: 99;
+    ul {
         width: 100%;
         margin: 0 auto;
         display: flex;
-        li{
-            flex:1;
+
+        li {
+            flex: 1;
             text-align: center;
-            a{
+
+            a {
                 width: 40%;
                 display: block;
                 line-height: 40px;
@@ -41,6 +47,8 @@ export default {
     }
 }
 .active-li {
+    position: static;
+    top: 0;
     color: #ff5f16;
     border-bottom: 2px solid #ff5f16;
 }

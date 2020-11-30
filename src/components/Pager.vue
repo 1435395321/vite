@@ -29,7 +29,7 @@ export default {
     color: #fff;
     font-size: 20px;
     text-align: center;
-     width: 100%;
+    width: 100%;
     height: 200px;
     img{
         width: 100%;

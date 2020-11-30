@@ -31,7 +31,7 @@ const router = createRouter({
         }
     },
     {
-        path: '/detail:myid',//动态路由
+        path: '/detail/:myid',//动态路由
         name: 'Detail',
         component: Detail,
         props: true

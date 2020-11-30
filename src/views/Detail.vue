@@ -1,6 +1,6 @@
 <template>
     <div>Detail
-        <h1>{{ $route.params.myid}}</h1>
+        <h1></h1>
     </div>
 </template>
 <script>
@@ -9,6 +9,11 @@ import {useRoute} from 'vue-router';
 export default {
     name: "Detail",
     setup() {
+        const route = useRoute();
+        const id = route.params.myid;
+        return {
+            
+        }
     },
 };
 </script>

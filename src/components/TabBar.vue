@@ -3,19 +3,19 @@
         <ul>
             <li>
                 <router-link to="/film" active-class="active">
-                    <van-icon name="chat-o"/>
+                    <van-icon name="play-circle-o"  size="20"/>
                     <div>电影</div>
                 </router-link>
             </li>
             <li>
                 <router-link to="/cinema" active-class="active">
-                    <van-icon name="chat-o" />
+                    <van-icon name="video-o"  size="20"/>
                     <div>影院</div></router-link
                 >
             </li>
             <li>
                 <router-link to="/center" active-class="active">
-                    <van-icon name="chat-o" />
+                    <van-icon name="user-o"  size="20"/>
                     <div>我的</div></router-link
                 >
             </li>
@@ -35,11 +35,7 @@ nav {
     position: fixed;
     bottom: 0;
     border-top: 1px solid #ccc;
-    &::after{
-       contain: '';
-       width: 100%;
-       height: 55px; 
-    }
+    z-index: 2;
     ul {
         width: 100%;
         height: 55px;

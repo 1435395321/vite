@@ -1,10 +1,11 @@
 <template>
-    <h1>Noplaying</h1>
+    <div>123</div>
 </template>
 
 <script>
-import { get } from '../../utils/axios'
+import { provide, ref } from "vue";
 export default {
     name: "Noplaying",
+    setup() {},
 };
 </script>
