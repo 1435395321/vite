@@ -9,37 +9,36 @@
 <script>
 import axios from "axios";
 import FilmHeader from "./films/FilmHeader.vue";
-import Pager from '../components/Pager.vue'
+import Pager from "../components/Pager.vue";
 export default {
     name: "Film",
     components: {
         FilmHeader,
-        Pager
+        Pager,
     },
-    setup() {
-    },
+    setup() {},
 };
 </script>
 
 <style scope lang="scss">
- .my-swipe .van-swipe-item {
+.my-swipe .van-swipe-item {
     color: #fff;
     font-size: 20px;
     line-height: 150px;
     text-align: center;
     background-color: #39a9ed;
-  }
+}
 .swiper {
     width: 100%;
     background: #e09999;
     height: 200px;
 }
- .goods-card {
+.goods-card {
     margin: 0;
-    background-color:#fff;
-  }
+    background-color: #fff;
+}
 
-  .delete-button {
+.delete-button {
     height: 100%;
-  }
+}
 </style>

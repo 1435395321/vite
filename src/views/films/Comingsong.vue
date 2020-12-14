@@ -1,7 +1,7 @@
 <template>
     <div>
         <ul class="coming-list">
-            <li v-for="(item, index) in listData" :key="index">
+            <li v-for="(item, index) of listData" :key="index">
                 <a @click="detail(item.filmId)">
                     <div>
                         <img :src="item.poster" />
@@ -9,12 +9,13 @@
                     <div>
                         <p class="coming-title">{{ item.name }}</p>
                         <p></p>
-                        <p>主演：
-                            <span v-for="(list,index) in item.actors" :key="index">{{list.name}}</span>
+                        <p>
+                            主演：
+                            <span v-for="(list, index) in item.actors" :key="index">{{list.name}}</span>
                         </p>
                         <p>{{ item.nation }} | {{ item.runtime }}分钟</p>
                     </div>
-                    <div >购买</div>
+                    <div>购买</div>
                 </a>
             </li>
         </ul>
@@ -22,25 +23,34 @@
 </template>
 
 <script>
-import { defineComponent, toRefs, reactive, computed,ref } from "vue";
-import { RfilmList } from "../../api/film";
-import {useRouter} from 'vue-router'
+import { defineComponent, toRefs, reactive, computed, ref } from "vue";
+// import { RfilmList } from "../../api/film";
+import http from '/@/utils/https'
+import { useRouter } from "vue-router";
 export default defineComponent({
     name: "Comingsong",
     setup() {
         const data = reactive({
             listData: [],
         });
-        RfilmList().then((res) => {
-            data.listData = res.data.films;
-        });
+        http({
+            url:'gateway?cityId=310100&pageNum=1&pageSize=10&type=1&k=136082',
+            headers:{
+                'X-Host': 'mall.film-ticket.film.list'
+            }
+        }).then(res => {
+            data.listData = res.data.data.films;
+        })
+        // RfilmList().then((res) => {
+        //     data.listData = res.data.films;
+        // });
         const router = useRouter();
         const detail = (e) => {
-            router.push(`/detail/${e}`)
-        }
+            router.push(`/detail/${e}`);
+        };
         return {
             ...toRefs(data),
-            detail
+            detail,
         };
     },
 });

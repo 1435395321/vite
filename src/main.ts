@@ -5,7 +5,7 @@ import './index.css'
 import Router from './router'
 import Store from './store'
 
-import { Button, Form,Slider, Toast,Notify,SwipeCell,Icon, Swipe, SwipeItem,Lazyload,Card  } from 'vant';
+import { Button, Form, Slider, Toast, Notify, SwipeCell, Icon, Swipe, SwipeItem, Lazyload, Card } from 'vant';
 import 'vant/lib/index.css'; // 全局引入样式
 
 const app = createApp(App)
