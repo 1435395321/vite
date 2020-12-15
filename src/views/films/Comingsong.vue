@@ -1,12 +1,12 @@
 <template>
     <div>
         <ul class="coming-list">
-            <li v-for="(item, index) of listData" :key="index">
-                <a @click="detail(item.filmId)">
-                    <div>
+            <li v-for="item of listData" :key="item.id">
+                <a>
+                    <div @click="detail(item.filmId)">
                         <img :src="item.poster" />
                     </div>
-                    <div>
+                    <div @click="detail(item.filmId)">
                         <p class="coming-title">{{ item.name }}</p>
                         <p></p>
                         <p>
@@ -24,14 +24,13 @@
 
 <script>
 import { defineComponent, toRefs, reactive, computed, ref } from "vue";
-// import { RfilmList } from "../../api/film";
 import http from '/@/utils/https'
 import { useRouter } from "vue-router";
-export default defineComponent({
+export default {
     name: "Comingsong",
     setup() {
         const data = reactive({
-            listData: [],
+            listData: []
         });
         http({
             url:'gateway?cityId=310100&pageNum=1&pageSize=10&type=1&k=136082',
@@ -53,7 +52,7 @@ export default defineComponent({
             detail,
         };
     },
-});
+};
 </script>
 
 <style lang="scss" scope>

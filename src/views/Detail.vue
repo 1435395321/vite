@@ -8,13 +8,22 @@
         <div>{{ filmInfo.category }}</div>
         <div>{{ filmInfo.premiereAt }}</div>
         <div>{{ filmInfo.nation }} | {{ filmInfo.runtime }}分钟</div>
-        <div :class="isShow ? '' : 'synopsis'">{{ filmInfo.synopsis }}</div>
+        <div :class="isShow ? 'synopsisShow' : 'synopsis'">
+            {{ filmInfo.synopsis }}
+        </div>
         <div class="icon">
-            <van-icon @click="more" :name="isShow ? 'arrow-up' : 'arrow-down'" />
+            <van-icon
+                @click="more"
+                :name="isShow ? 'arrow-up' : 'arrow-down'"
+            />
         </div>
         <h4 class="action">演职人员</h4>
         <van-swipe :loop="false" :width="130" :show-indicators="false">
-            <van-swipe-item v-for="(item, index) in filmInfo.actors" class="swipe">
+            <van-swipe-item
+                v-for="(item, index) in filmInfo.actors"
+                class="swipe"
+                :key="index"
+            >
                 <img class="swiper-img" :src="item.avatarAddress" />
                 <div class="swiper-text">{{ item.name }}</div>
                 <div class="swiper-text">{{ item.role }}</div>
@@ -22,14 +31,25 @@
         </van-swipe>
         <h4 class="action">剧照</h4>
         <van-swipe :loop="false" :width="130" :show-indicators="false">
-            <van-swipe-item v-for="(item, index) in filmInfo.photos" class="swipe">
+            <van-swipe-item
+                v-for="(item, index) in filmInfo.photos"
+                class="swipe"
+                :key="index"
+            >
                 <img class="swiper-img" :src="item" />
             </van-swipe-item>
         </van-swipe>
     </div>
 </template>
 <script>
-import { onMounted, getCurrentInstance, ref, computed, reactive, toRefs } from "vue";
+import {
+    onMounted,
+    getCurrentInstance,
+    ref,
+    computed,
+    reactive,
+    toRefs,
+} from "vue";
 import { useRoute } from "vue-router";
 import http from "/@/utils/https";
 export default {
@@ -37,9 +57,10 @@ export default {
     setup() {
         const route = useRoute();
         const id = route.params.myid;
-        const filmInfo = ref(null);
+        // const filmInfo = ref(null);
         const data = reactive({
             isShow: false,
+            filmInfo:null
         });
         http({
             url: `gateway?filmId=${id}&k=4729349`,
@@ -47,7 +68,7 @@ export default {
                 "X-Host": " mall.film-ticket.film.info",
             },
         }).then((res) => {
-            filmInfo.value = res.data.data.film;
+            data.filmInfo = res.data.data.film;
             let date = new Date(parseInt(res.data.data.film.premiereAt) * 1000);
             res.data.data.film.premiereAt = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
         });
@@ -61,16 +82,15 @@ export default {
         };
         return {
             ...toRefs(data),
-            filmInfo,
             more,
         };
     },
 };
 </script>
 <style scoped lang="scss">
-.warp{
-    padding:0 10px;
-    margin-bottom:70px
+.warp {
+    padding: 0 10px;
+    margin-bottom: 70px;
 }
 .img {
     height: 200px;
@@ -78,8 +98,17 @@ export default {
     background-position: center;
 }
 .synopsis {
-    height: 50px;
+    height: 38px;
+    font-size: 14px;
     overflow: hidden;
+    transition: 0.5s ease;
+    opacity: 0.5;
+}
+.synopsisShow {
+    height: 155px;
+    opacity: 0.5;
+    font-size: 14px;
+    transition: 0.5s ease;
 }
 .icon {
     text-align: center;
@@ -95,7 +124,7 @@ export default {
     margin: 0 auto;
     display: block;
 }
-.action{
-    margin: 5px 0
+.action {
+    margin: 5px 0;
 }
 </style>
