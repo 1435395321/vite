@@ -1,5 +1,6 @@
 <template>
     <div v-if="filmInfo" class="warp">
+        <detail-header :title="filmInfo.name"></detail-header>
         <div
             class="img"
             :style="{ backgroundImage: 'url(' + filmInfo.poster + ')' }"
@@ -52,15 +53,18 @@ import {
 } from "vue";
 import { useRoute } from "vue-router";
 import http from "/@/utils/https";
+import DetailHeader from "./Detail/DetailHeader.vue";
 export default {
     name: "Detail",
+    components: {
+        DetailHeader,
+    },
     setup() {
         const route = useRoute();
         const id = route.params.myid;
-        // const filmInfo = ref(null);
         const data = reactive({
             isShow: false,
-            filmInfo:null
+            filmInfo: null,
         });
         http({
             url: `gateway?filmId=${id}&k=4729349`,
@@ -90,7 +94,6 @@ export default {
 <style scoped lang="scss">
 .warp {
     padding: 0 10px;
-    margin-bottom: 70px;
 }
 .img {
     height: 200px;

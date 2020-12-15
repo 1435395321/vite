@@ -61,7 +61,7 @@ const router = createRouter({
     ]
 })
 router.beforeEach((to, from, next) => {
-    let auth = ['/cart','/order','/address','/cinema'];  //需要验证的路由
+    let auth = ['/cart','/order','/address'];  //需要验证的路由
     if(auth.includes(to.fullPath)) {
         console.log('需要验证，返回登录页');
     } else {

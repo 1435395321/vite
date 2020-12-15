@@ -67,9 +67,6 @@ export default {
         height: 94px;
         position: relative;
         font-size: 12px;
-        &:last-child {
-            margin-bottom: 50px;
-        }
         a {
             display: flex;
             justify-content: space-between;

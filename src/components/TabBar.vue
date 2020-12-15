@@ -1,4 +1,7 @@
 <template>
+<div>
+
+
     <nav>
         <ul>
             <li>
@@ -21,6 +24,8 @@
             </li>
         </ul>
     </nav>
+    <div class="zhanwei"></div>
+    </div>
 </template>
 
 <script>
@@ -48,6 +53,10 @@ nav {
     }
    
 }
+.zhanwei{
+       width: 100%;
+       height: 55px;
+   }
  .active {
     color: rgb(207, 118, 34);
 }
