@@ -1,7 +1,15 @@
 <template>
     <div>
-        <ul class="coming-list">
-            <li v-for="item of listData" :key="item.id">
+        <van-list
+            van-list
+            v-model:loading="state.loading"
+            :finished="state.finished"
+            finished-text="没有更多了"
+            @load="onLoad"
+            class="coming-list"
+            v-if="state.list"
+        >
+            <van-cell class="cell" v-for="item in state.list" :key="item">
                 <a>
                     <div @click="detail(item.filmId)">
                         <img :src="item.poster" />
@@ -11,44 +19,63 @@
                         <p></p>
                         <p>
                             主演：
-                            <span v-for="(list, index) in item.actors" :key="index">{{list.name}}</span>
+                            <span
+                                v-for="(list, index) in item.actors"
+                                :key="index"
+                                >{{ list.name }}</span
+                            >
                         </p>
                         <p>{{ item.nation }} | {{ item.runtime }}分钟</p>
                     </div>
                     <div>购买</div>
                 </a>
-            </li>
-        </ul>
+            </van-cell>
+        </van-list>
     </div>
 </template>
 
 <script>
-import { defineComponent, toRefs, reactive, computed, ref } from "vue";
-import http from '/@/utils/https'
+import { defineComponent, reactive, computed, ref } from "vue";
+import http from "/@/utils/https";
 import { useRouter } from "vue-router";
+import { useStore  } from "vuex";
 export default {
     name: "Comingsong",
     setup() {
-        const data = reactive({
-            listData: []
+        const state = reactive({
+            list: [],
+            // s是否在加载中
+            loading: false,
+            // 是否结束
+            finished: false,
+            current: 0,
         });
-        http({
-            url:'gateway?cityId=310100&pageNum=1&pageSize=10&type=1&k=136082',
-            headers:{
-                'X-Host': 'mall.film-ticket.film.list'
-            }
-        }).then(res => {
-            data.listData = res.data.data.films;
-        })
-        // RfilmList().then((res) => {
-        //     data.listData = res.data.films;
-        // });
+        const store = useStore();
+        const onLoad = () => {
+            state.current ++;
+            // 异步更新数据
+            // setTimeout 仅做示例，真实场景中一般为 ajax 请求
+            http({
+                url: `gateway?cityId=${store.state.cityId}&pageNum=${state.current}&pageSize=10&type=1&k=136082`,
+                headers: {
+                    "X-Host": "mall.film-ticket.film.list",
+                },
+            }).then((res) => {
+                let data = res.data.data
+                state.list = [...state.list,...data.films];
+                state.loading = false
+                if(state.list.length>data.total){
+                    state.finished = true;
+                }
+            });
+        };
         const router = useRouter();
         const detail = (e) => {
             router.push(`/detail/${e}`);
         };
         return {
-            ...toRefs(data),
+            state,
+            onLoad,
             detail,
         };
     },
@@ -58,13 +85,10 @@ export default {
 <style lang="scss" scope>
 .coming-list {
     list-style: none;
-    padding: 0;
-    margin-left: 15px;
     margin-bottom: 0;
     margin-top: 0;
-    li {
-        padding: 15px 15px 15px 0;
-        height: 94px;
+    .cell {
+        padding: 15px;
         position: relative;
         font-size: 12px;
         a {

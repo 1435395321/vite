@@ -7,7 +7,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import FilmHeader from "./films/FilmHeader.vue";
 import Pager from "../components/Pager.vue";
 export default {

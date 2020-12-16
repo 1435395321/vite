@@ -36,6 +36,7 @@
                 v-for="(item, index) in filmInfo.photos"
                 class="swipe"
                 :key="index"
+                @click="handlImg(index)"
             >
                 <img class="swiper-img" :src="item" />
             </van-swipe-item>
@@ -54,6 +55,7 @@ import {
 import { useRoute } from "vue-router";
 import http from "/@/utils/https";
 import DetailHeader from "./Detail/DetailHeader.vue";
+import { ImagePreview } from 'vant';
 export default {
     name: "Detail",
     components: {
@@ -84,9 +86,22 @@ export default {
                 data.isShow = true;
             }
         };
+        // 预览图片
+        const handlImg = (index) => {
+            ImagePreview(
+                {
+                    images: data.filmInfo.photos,
+                    startPosition: index,
+                    loop:false,
+                    closeable:true,
+
+                }
+            );
+        }
         return {
             ...toRefs(data),
             more,
+            handlImg
         };
     },
 };
@@ -119,6 +134,8 @@ export default {
 
 .swiper-text {
     text-align: center;
+    font-size: 14px;
+    color: rgb(173, 173, 173);
 }
 
 .swiper-img {
