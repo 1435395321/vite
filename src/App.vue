@@ -1,5 +1,6 @@
 <template>
     <div class="app">
+        {{isShowTab}}
         <section>
             <router-view></router-view>
         </section>
@@ -9,18 +10,19 @@
 
 <script>
 import TabBar from "./components/TabBar.vue";
-import { ref } from "vue";
-import { mapState } from "vuex";
+import { computed, ref } from "vue";
+import { useStore } from "vuex";
 export default {
     name: "App",
     components: {
         TabBar,
     },
-    computed: mapState({
-        isShowTab: (state) => state.isShowTab,
-    }),
+    // computed: mapState({
+    //     isShowTab: (state) => state.isShowTab,
+    // }),
     setup() {
         const curIdx = ref(0);
+        const store = useStore();
         const handlTab = (e) => {
             const tar = e.target;
             const className = tar.className;
@@ -29,9 +31,13 @@ export default {
                 curIdx.value = parseInt(index);
             }
         };
+        const isShowTab = computed (() => {
+            return store.state.isShowTab
+        })
         return {
             handlTab,
             curIdx,
+            isShowTab
         };
     },
 };

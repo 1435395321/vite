@@ -5,7 +5,6 @@
                 v-model="value"
                 show-action
                 placeholder="请输入搜索关键词"
-                @search="onSearch"
                 @cancel="onCancel"
             />
         </form>
@@ -23,7 +22,7 @@
         </ul>
         <!-- 搜索提示 -->
         <div v-else>
-            <van-empty image="search" description="未搜索到数据" />
+            <van-empty image="search" description="输入要搜索的数据" />
         </div>
     </div>
 </template>
@@ -31,29 +30,24 @@
 <script>
 import { computed, reactive, toRefs } from "vue";
 import { mapState, useStore } from "vuex";
+import { Notify } from 'vant'
+import { useRouter } from "vue-router";
 export default {
     name: "Search",
-    // computed: mapState({
-    //     computedCinemaList(state) {
-    //         console.log(status.value)
-    //         return state.cinemaList.filter(item => item.name.includes(state.value));
-    //     },
-    // }),
     setup() {
-        const store = useStore();
+        const store = useStore(),
+              router = useRouter();
         const state = reactive({
             value: "",
         });
         if (store.state.cinemaList.length == 0) {
             store.dispatch("getCinema", store.state.cityId);
         }
-        const onSearch = (val) => {
-            Toast(val);
-        };
         const onCancel = () => {
-            Toast("取消");
+            router.replace('/cinema')
         };
         const computedCinemaList = computed(() => {
+            if( state.value ==='' ) return [];
             return store.state.cinemaList.filter((item) =>
                 item.name.toUpperCase().includes(state.value.toUpperCase().trim()) || item.address.toUpperCase().includes(state.value.toUpperCase().trim())
             );
@@ -61,7 +55,6 @@ export default {
         return {
             computedCinemaList,
             ...toRefs(state),
-            onSearch,
             onCancel,
         };
     },
