@@ -1,12 +1,16 @@
 <template>
     <div>
-        <van-nav-bar title="影院" @click-left="hangleft()">
+        <van-nav-bar
+            title="影院"
+            @click-left="hangLeft()"
+            @click-right="hangRight()"
+        >
             <template #left>
-                <span>{{cityName}}</span>
-                <van-icon name="arrow-down" size="12" color="#333"/>
+                <span>{{ cityName }}</span>
+                <van-icon name="arrow-down" size="12" color="#333" />
             </template>
             <template #right>
-                <van-icon name="search" size="22" color="#333"/>
+                <van-icon name="search" size="22" color="#333" />
             </template>
         </van-nav-bar>
         <div class="cinema" :style="{ height: height }">
@@ -27,29 +31,37 @@
 </template>
 
 <script>
-import { nextTick, reactive, toRefs } from "vue";
+import { computed, nextTick, reactive, toRefs } from "vue";
 import http from "/@/utils/https";
 import betterScroll from "better-scroll";
-import { useRouter } from 'vue-router'
-import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+import { useStore, mapState } from "vuex";
 export default {
     name: "Cinema",
+    // computed: mapState({
+    //     cinemaList(state) {
+    //         return state.cinemaList;
+    //     },
+    // }),
     setup() {
         const router = useRouter();
         const data = reactive({
-            cinemaList: [],
             height: 0,
         });
         const store = useStore();
         const cityName = store.state.cityName;
-        data.height = document.documentElement.clientHeight -50 + "px";
-        http({
-            url: `gateway?cityId=${store.state.cityId}&ticketFlag=1&k=471474`,
-            headers: {
-                "X-Host": "mall.film-ticket.cinema.list",
-            },
-        }).then((res) => {
-            data.cinemaList = res.data.data.cinemas;
+        data.height = document.documentElement.clientHeight - 100 + "px";
+        if (store.state.cinemaList.length == 0) {
+            store.dispatch("getCinema", store.state.cityId).then((res) => {
+                nextTick(() => {
+                    const better = new betterScroll(".cinema", {
+                        scrollbar: {
+                            fade: true,
+                        },
+                    });
+                });
+            });
+        } else {
             nextTick(() => {
                 const better = new betterScroll(".cinema", {
                     scrollbar: {
@@ -57,15 +69,26 @@ export default {
                     },
                 });
             });
-        });
-        //地址跳转
-        const  hangleft = () => {
-            router.push('/city')
         }
+        const cinemaList = computed(() => {
+            return store.state.cinemaList;
+        })
+        //地址跳转
+        const hangLeft = () => {
+            // 清空cinemaList
+            store.commit("cinemaEmpty");
+            router.push("/city");
+        };
+        // 搜索跳转
+        const hangRight = () => {
+            router.push("/cinema/search");
+        };
         return {
+            cinemaList,
             cityName,
             ...toRefs(data),
-            hangleft
+            hangLeft,
+            hangRight,
         };
     },
 };

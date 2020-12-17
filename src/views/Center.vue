@@ -1,5 +1,5 @@
 <template>
-	<h1>Cinema</h1>
+	<h1>CenterCenter</h1>
 </template>
 
 <script>

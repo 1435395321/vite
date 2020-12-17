@@ -30,6 +30,12 @@ instace.interceptors.response.use(function (response) {
     Toast.clear()
     return response;
   }, function (error) {
+      Toast.loading({
+          message:'系统错误',
+          forbidClick: true,
+          loadingType:'spinner',
+          duration: 3000
+      })
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
     return Promise.reject(error);

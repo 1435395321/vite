@@ -51,11 +51,13 @@ import {
     computed,
     reactive,
     toRefs,
+    onUnmounted,
 } from "vue";
 import { useRoute } from "vue-router";
 import http from "/@/utils/https";
 import DetailHeader from "./Detail/DetailHeader.vue";
-import { ImagePreview } from 'vant';
+import { ImagePreview } from "vant";
+import { useStore,mapState } from "vuex";
 export default {
     name: "Detail",
     components: {
@@ -63,6 +65,7 @@ export default {
     },
     setup() {
         const route = useRoute();
+        const store = useStore();
         const id = route.params.myid;
         const data = reactive({
             isShow: false,
@@ -88,20 +91,23 @@ export default {
         };
         // 预览图片
         const handlImg = (index) => {
-            ImagePreview(
-                {
-                    images: data.filmInfo.photos,
-                    startPosition: index,
-                    loop:false,
-                    closeable:true,
-
-                }
-            );
-        }
+            ImagePreview({
+                images: data.filmInfo.photos,
+                startPosition: index,
+                loop: false,
+                closeable: true,
+            });
+        };
+        // 隐藏tab
+        store.commit("hideTab");
+        // 页面离开 现实tab
+        onUnmounted(() => {
+            store.commit("showTab");
+        });
         return {
             ...toRefs(data),
             more,
-            handlImg
+            handlImg,
         };
     },
 };

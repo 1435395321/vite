@@ -9,6 +9,7 @@ import Comingsong from '../views/films/Comingsong.vue'
 import Noplaying from '../views/films/Noplaying.vue'
 import Detail from '../views/Detail.vue'
 import City from '../views/City.vue'
+import Search from '../views/Search.vue'
 const router = createRouter({
     history: createWebHashHistory(), // hash模式：createWebHashHistory，history模式：createWebHistory
     routes: [{
@@ -19,11 +20,6 @@ const router = createRouter({
             path: '/center',
             name: 'Center',
             component: Center,
-        },
-        {
-            path: '/cinema',
-            name: 'Cinema',
-            component: Cinema,
         },
         {
             path: '/detail/:myid', //动态路由
@@ -51,6 +47,18 @@ const router = createRouter({
                     redirect: '/film/comingsong'
                 },
             ]
+        },
+        
+        {
+            path: '/cinema',
+            name: 'Cinema',
+            component: Cinema,
+        },
+        
+        {
+            path: '/cinema/search',
+            name: 'Search',
+            component: Search,
         },
         {
             path:'/city',

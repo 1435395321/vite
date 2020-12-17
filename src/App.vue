@@ -1,19 +1,24 @@
 <template>
     <div class="app">
-        
-        <router-view></router-view>
-        <tab-bar></tab-bar>
+        <section>
+            <router-view></router-view>
+        </section>
+        <tab-bar v-show="isShowTab"></tab-bar>
     </div>
 </template>
 
 <script>
 import TabBar from "./components/TabBar.vue";
 import { ref } from "vue";
+import { mapState } from "vuex";
 export default {
     name: "App",
     components: {
         TabBar,
     },
+    computed: mapState({
+        isShowTab: (state) => state.isShowTab,
+    }),
     setup() {
         const curIdx = ref(0);
         const handlTab = (e) => {
