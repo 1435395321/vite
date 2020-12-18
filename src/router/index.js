@@ -10,6 +10,7 @@ import Noplaying from '../views/films/Noplaying.vue'
 import Detail from '../views/Detail.vue'
 import City from '../views/City.vue'
 import Search from '../views/Search.vue'
+import Consult from '../views/Consult.vue'
 const router = createRouter({
     history: createWebHashHistory(), // hash模式：createWebHashHistory，history模式：createWebHistory
     routes: [{
@@ -64,6 +65,11 @@ const router = createRouter({
             path:'/city',
             name:'City',
             component:City
+        },
+        {
+            path:'/consult',
+            name:'Consult',
+            component:Consult
         },
         {
             path: '/:pathMatch(.*)*',

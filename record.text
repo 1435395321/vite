@@ -14,3 +14,12 @@ router.beforeEach((to, from, next) => {
         next();
     }
 })
+ 
+    "axios": "^0.20.0-0",
+    "better-scroll": "^2.0.6",  影院 大列表 滑动的
+    "qs": "^6.9.4",             序列化对象
+    "vant": "^3.0.0-beta.10",   ui组件
+    "vue": "^3.0.2",            
+    "vuex": "^4.0.0-rc.1",      状态管理
+    "vuex-persistedstate": "^4.0.0-beta.1"  状态管理持久化
+    vue-touch                 左右滑动

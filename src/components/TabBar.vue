@@ -1,30 +1,34 @@
 <template>
-<div>
-
-
-    <nav>
-        <ul>
-            <li>
-                <router-link to="/film" active-class="active">
-                    <van-icon name="play-circle-o"  size="20"/>
-                    <div>电影</div>
-                </router-link>
-            </li>
-            <li>
-                <router-link to="/cinema" active-class="active">
-                    <van-icon name="video-o"  size="20"/>
-                    <div>影院</div></router-link
-                >
-            </li>
-            <li>
-                <router-link to="/center" active-class="active">
-                    <van-icon name="user-o"  size="20"/>
-                    <div>我的</div></router-link
-                >
-            </li>
-        </ul>
-    </nav>
-    <div class="zhanwei"></div>
+    <div>
+        <nav>
+            <ul>
+                <li>
+                    <router-link to="/film" active-class="active">
+                        <van-icon name="play-circle-o" size="20" />
+                        <div>电影</div>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="/cinema" active-class="active">
+                        <van-icon name="video-o" size="20" />
+                        <div>影院</div>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="/consult" active-class="active">
+                        <van-icon name="description" size="20" />
+                        <div>咨询</div>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="/center" active-class="active">
+                        <van-icon name="user-o" size="20" />
+                        <div>我的</div>
+                    </router-link>
+                </li>
+            </ul>
+        </nav>
+        <div class="zhanwei"></div>
     </div>
 </template>
 
@@ -51,13 +55,12 @@ nav {
             text-align: center;
         }
     }
-   
 }
-.zhanwei{
-       width: 100%;
-       height: 55px;
-   }
- .active {
+.zhanwei {
+    width: 100%;
+    height: 55px;
+}
+.active {
     color: rgb(207, 118, 34);
 }
 </style>

@@ -1,6 +1,5 @@
 <template>
     <div class="app">
-        {{isShowTab}}
         <section>
             <router-view></router-view>
         </section>
@@ -11,7 +10,7 @@
 <script>
 import TabBar from "./components/TabBar.vue";
 import { computed, ref } from "vue";
-import { useStore } from "vuex";
+import { useStore, mapState } from "vuex";
 export default {
     name: "App",
     components: {
@@ -43,4 +42,8 @@ export default {
 };
 </script>
 <style lang="scss" scope>
+ *{
+    //  解决三百毫秒
+    touch-action: manipulation;
+ }
 </style>
