@@ -1,6 +1,6 @@
 <template>
     <div>
-        <van-index-bar :index-list="plus" @change="hanglchang">
+        <van-index-bar :index-list="plus">
             <div v-for="data in cityList" :key="data.type">
                 <van-index-anchor :index="data.type"></van-index-anchor>
                 <van-cell
@@ -60,10 +60,6 @@ export default {
                 return item.type
             })
         });
-        // 提示
-        const hanglchang = (e) => {
-            // Toast(e)
-        }
         // 返回记录城市
         const hanglCity = (name,cityId) => {
             const data = {

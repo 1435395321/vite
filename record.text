@@ -23,3 +23,10 @@ router.beforeEach((to, from, next) => {
     "vuex": "^4.0.0-rc.1",      状态管理
     "vuex-persistedstate": "^4.0.0-beta.1"  状态管理持久化
     vue-touch                 左右滑动
+
+
+
+    nginx
+    nginx.exe -s reload 刷新
+    nginx.exe -s stop  停止
+    nginx -c 启动设置文件

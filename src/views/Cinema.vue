@@ -13,6 +13,17 @@
                 <van-icon name="search" size="22" color="#333" />
             </template>
         </van-nav-bar>
+        <van-dropdown-menu>
+            <van-dropdown-item title="全城" ref="item">
+                <div class="drop">
+                    <div class="drop-list" v-for="(list,index) in cinemaList" :key="index">
+                        <p :class="{'active': activeIdx===index}"  @click="dropListOne(index)">{{list.districtName}}</p>
+                    </div>
+                </div>
+            </van-dropdown-item>
+            <van-dropdown-item v-model="value" :options="option"/>
+            <van-dropdown-item v-model="value1" :options="option1" />
+        </van-dropdown-menu>
         <div class="cinema" :style="{ height: height }">
             <ul>
                 <li v-for="item in cinemaList" :key="item.seatFlag">
@@ -38,19 +49,25 @@ import { useRouter } from "vue-router";
 import { useStore, mapState } from "vuex";
 export default {
     name: "Cinema",
-    // computed: mapState({
-    //     cinemaList(state) {
-    //         return state.cinemaList;
-    //     },
-    // }),
     setup() {
         const router = useRouter();
         const data = reactive({
             height: 0,
+            value: 0,
+            value1: 0,
+            option: [
+                { text: "APP订票", value: 0 },
+                { text: "前台兑换", value: 1 },
+            ],
+            option1: [
+                { text: "最近去过", value: 0 },
+                { text: "距离最近", value: 1 },
+            ],
+            activeIdx:0
         });
         const store = useStore();
         const cityName = store.state.cityName;
-        data.height = document.documentElement.clientHeight - 100 + "px";
+        data.height = document.documentElement.clientHeight - 148 + "px";
         if (store.state.cinemaList.length == 0) {
             store.dispatch("getCinema", store.state.cityId).then((res) => {
                 nextTick(() => {
@@ -72,7 +89,11 @@ export default {
         }
         const cinemaList = computed(() => {
             return store.state.cinemaList;
-        })
+        });
+        const dropListOne = (value) => {
+            data.activeIdx = value
+        }
+
         //地址跳转
         const hangLeft = () => {
             // 清空cinemaList
@@ -89,14 +110,48 @@ export default {
             ...toRefs(data),
             hangLeft,
             hangRight,
+            dropListOne
         };
     },
 };
 </script>
-
+<style lang="scss">
+.van-dropdown-menu__bar {
+    z-index: 99;
+}
+</style>
 <style lang="scss" scoped>
 .cinema {
     position: relative;
+}
+.drop {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+
+    .drop-list {
+        width: 20%;
+        margin-right: 5%;
+        margin-bottom: 5px;
+
+        p {
+            padding: 5px;
+            border: 1px solid #ccc;
+            text-align: center;
+            font-size: 13px;
+            color: rgb(95, 95, 95);
+        }
+        .active {
+            border: 1px solid rgb(241, 110, 110);
+            color:rgb(241, 110, 110);
+        }
+        &:nth-child(4n) {
+            margin-right: 0;
+        }
+    }
 }
 ul {
     width: 100%;

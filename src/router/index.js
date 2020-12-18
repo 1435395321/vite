@@ -21,12 +21,18 @@ const router = createRouter({
             path: '/center',
             name: 'Center',
             component: Center,
+            meta: {
+                index: 1
+            }
         },
         {
             path: '/detail/:myid', //动态路由
             name: 'Detail',
             component: Detail,
-            props: true //验证规则
+            props: true, //验证规则
+            meta: {
+                index: 2
+            }
         },
         // {
         //     path:'/detail',
@@ -35,6 +41,9 @@ const router = createRouter({
         {
             path: '/film',
             component: Film,
+            meta: {
+                index: 1
+            },
             children: [{
                     path: 'comingsong',
                     component: Comingsong
@@ -49,27 +58,39 @@ const router = createRouter({
                 },
             ]
         },
-        
+
         {
             path: '/cinema',
             name: 'Cinema',
             component: Cinema,
+            meta: {
+                index: 1
+            }
         },
-        
+
         {
             path: '/cinema/search',
             name: 'Search',
             component: Search,
+            meta: {
+                index: 2
+            }
         },
         {
-            path:'/city',
-            name:'City',
-            component:City
+            path: '/city',
+            name: 'City',
+            component: City,
+            meta: {
+                index: 2
+            }
         },
         {
-            path:'/consult',
-            name:'Consult',
-            component:Consult
+            path: '/consult',
+            name: 'Consult',
+            component: Consult,
+            meta: {
+                index: 1
+            }
         },
         {
             path: '/:pathMatch(.*)*',
