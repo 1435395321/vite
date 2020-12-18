@@ -70,7 +70,6 @@ export default {
         }
         return {
             plus,
-            hanglchang,
             ...toRefs(state),
             hanglCity,
         };

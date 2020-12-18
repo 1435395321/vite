@@ -84,19 +84,19 @@ li {
     backface-visibility: hidden;
 }
 .slide-right-enter {
-    opacity: 0.4;
+    opacity: 0;
     transform: translate3d(0, -40%, 0);
 }
 .slide-right-leave-active {
-    opacity: 0.4;
+    opacity: 0;
     transform: translate3d(0, 40%, 0);
 }
 .slide-left-enter {
-    opacity: 0.4;
+    opacity: 0;
     transform: translate3d(0, 40%, 0);
 }
 .slide-left-leave-active {
-    opacity: 0.4;
+    opacity: 0;
     transform: translate3d(0, -40%, 0);
 }
 </style>
