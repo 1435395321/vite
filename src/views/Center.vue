@@ -1,9 +1,9 @@
 <template>
     <div class="warp">
         <div class="top-login">
-            <div>
+            <div @click="login">
                 <img src="/@/assets/img/profile.jpg" class="top-img" />
-                <span>立即登录</span>
+                <span>{{ token ? "155****5187" : "请登录" }}</span>
             </div>
         </div>
         <!-- 选项 -->
@@ -19,7 +19,7 @@
         </van-row>
         <!-- 菜单 -->
         <div class="menu">
-            <div class="menu-list van-hairline--bottom">
+            <div class="menu-list van-hairline--bottom" @click="ticket">
                 <div class="menu-left">
                     <van-icon name="send-gift-o" color="#ff8462" />
                     <div>卖座券</div>
@@ -46,7 +46,7 @@
                     <van-icon name="arrow" color="#e7e8ea" />
                 </div>
             </div>
-            <div class="menu-list van-hairline--bottom">
+            <div class="menu-list van-hairline--bottom" @click="setting">
                 <div class="menu-left">
                     <van-icon name="setting-o" color="#bcce58" />
                     <div>设置</div>
@@ -60,69 +60,88 @@
 </template>
 
 <script>
+import { reactive, toRefs } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 export default {
     name: "Center",
+    setup() {
+        const router = useRouter(),
+            { state, commit } = useStore(),
+            data = reactive({
+                token: state.token,
+            });
+        // 优惠券
+        const ticket = () => {
+            commit("isToken", { path: "/ticket", router: router });
+        };
+        // 设置
+        const setting = () => {
+            commit("isToken", { path: "/center/setting", router: router });
+        };
+        // 登录
+        const login = () => {
+            if(state.token == '')
+                router.push("/login");
+        };
+        return {
+            ...toRefs(data),
+            ticket,
+            login,
+            setting,
+        };
+    },
 };
 </script>
 
 <style lang="scss" scoped>
-.warp {
-    position: absolute;
+.top-login {
     width: 100%;
-    top: 0%;
-    height: 100%;
-    background: #f4f4f4;
-    .top-login {
-        width: 100%;
-        height: 180px;
-        background-image: url("/@/assets/img/bg.6837f67.png");
-        background-size: 100% 100%;
+    height: 180px;
+    background-image: url("/@/assets/img/bg.6837f67.png");
+    background-size: 100% 100%;
+    display: flex;
+    align-items: center;
+
+    div {
         display: flex;
         align-items: center;
-
-        div {
-            // height: 63px;
-            display: flex;
-            align-items: center;
-            margin-left: 25px;
-            .top-img {
-                width: 70px;
-                height: 70px;
-                border-radius: 50%;
-                margin-right: 15px;
-            }
-            span {
-                color: #fff;
-            }
+        margin-left: 25px;
+        .top-img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        span {
+            color: #fff;
         }
     }
-    .nav-list {
-        width: 100%;
-        background: #fff;
-        height: 70px;
-        text-align: center;
-        font-size: 13px;
+}
+.nav-list {
+    width: 100%;
+    height: 70px;
+    text-align: center;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    color: #797d82;
+    margin-bottom: 10px;
+}
+.menu {
+    .menu-list {
+        height: 50px;
+        padding: 0 10px;
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        color: #797d82;
-        margin-bottom: 10px;
-    }
-    .menu {
-        background: #fff;
-        .menu-list {
-            height: 50px;
-            padding: 0 10px;
+        .menu-left {
+            height: 100%;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            .menu-left {
-                height: 100%;
-                display: flex;
-                align-items: center;
-                i {
-                    font-size: 22px;
-                    margin-right: 10px;
-                }
+            i {
+                font-size: 22px;
+                margin-right: 10px;
             }
         }
     }

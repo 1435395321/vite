@@ -63,8 +63,9 @@ export default {
             }).then((res) => {
                 let data = res.data.data
                 state.list = [...state.list,...data.films];
-                state.loading = false
-                if(state.list.length>data.total){
+                state.loading = false;
+                console.log(state.list.length)
+                if(state.list.length>=data.total){
                     state.finished = true;
                 }
             });

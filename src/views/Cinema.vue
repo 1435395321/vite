@@ -16,17 +16,30 @@
         <van-dropdown-menu>
             <van-dropdown-item title="全城" ref="item">
                 <div class="drop">
-                    <div class="drop-list" v-for="(list,index) in cinemaList" :key="index">
-                        <p :class="{'active': activeIdx===index}"  @click="dropListOne(index)">{{list.districtName}}</p>
+                    <div
+                        class="drop-list"
+                        v-for="(list, index) in areaList"
+                        :key="index"
+                    >
+                        <p
+                            :class="{ active: activeIdx === index }"
+                            @click="dropListOne(index, list)"
+                        >
+                            {{ list }}
+                        </p>
                     </div>
                 </div>
             </van-dropdown-item>
-            <van-dropdown-item v-model="value" :options="option"/>
+            <van-dropdown-item
+                v-model="value"
+                :options="option"
+                @change="conversionChange"
+            />
             <van-dropdown-item v-model="value1" :options="option1" />
         </van-dropdown-menu>
         <div class="cinema" :style="{ height: height }">
             <ul>
-                <li v-for="item in cinemaList" :key="item.seatFlag">
+                <li v-for="(item,index) in cinemaList" :key="index">
                     <div class="top common">
                         <p>{{ item.name }}</p>
                         <p class="price">{{ item.lowPrice }}起</p>
@@ -42,16 +55,20 @@
 </template>
 
 <script>
-import { computed, nextTick, reactive, toRefs } from "vue";
+import { computed, nextTick, reactive, toRefs, ref } from "vue";
 import http from "/@/utils/https";
 import betterScroll from "better-scroll";
 import { useRouter } from "vue-router";
 import { useStore, mapState } from "vuex";
+import { arrayToHeavy } from "/@/components/common";
+import { Search } from 'vant';
 export default {
     name: "Cinema",
     setup() {
         const router = useRouter();
+        const item = ref(null);
         const data = reactive({
+            cityName:'',
             height: 0,
             value: 0,
             value1: 0,
@@ -63,13 +80,16 @@ export default {
                 { text: "最近去过", value: 0 },
                 { text: "距离最近", value: 1 },
             ],
-            activeIdx:0
+            activeIdx: 0,
+            areaName: "",
         });
         const store = useStore();
-        const cityName = store.state.cityName;
+        data.cityName = store.state.cityName;
         data.height = document.documentElement.clientHeight - 148 + "px";
         if (store.state.cinemaList.length == 0) {
-            store.dispatch("getCinema", store.state.cityId).then((res) => {
+            let data = {cityId:store.state.cityId,index:1}
+            store.dispatch("getCinema", data).then((res) => {
+                // better 优化流畅加载大数量数据
                 nextTick(() => {
                     const better = new betterScroll(".cinema", {
                         scrollbar: {
@@ -88,12 +108,40 @@ export default {
             });
         }
         const cinemaList = computed(() => {
-            return store.state.cinemaList;
+            // 搜索全部
+            if (data.areaName == "全城") {
+                return store.state.cinemaList;
+            }
+            // 搜索
+            return store.state.cinemaList.filter((item) =>
+                item.districtName.includes(data.areaName)
+            );
         });
-        const dropListOne = (value) => {
-            data.activeIdx = value
+        const dropListOne = (value, list) => {
+            // 赋值 选中
+            data.activeIdx = value;
+            // 赋值
+            data.areaName = list;
+            // 选择关闭
+            item.value.toggle()
+           
+        };
+        // 区域筛选
+        let arr = [];
+        // 全程下拉单赋值
+        const areaList = computed(() => {
+            cinemaList.value.forEach((item) => {
+                arr.push(item.districtName);
+                arr.unshift("全城");
+            });
+            return arrayToHeavy(arr);
+        });
+        // 第二个下拉单事件
+        const conversionChange = (value) => {
+            let index = value+1;
+            let data = {cityId:store.state.cityId,index}
+            store.dispatch('getCinema',data)
         }
-
         //地址跳转
         const hangLeft = () => {
             // 清空cinemaList
@@ -106,11 +154,13 @@ export default {
         };
         return {
             cinemaList,
-            cityName,
             ...toRefs(data),
             hangLeft,
             hangRight,
-            dropListOne
+            dropListOne,
+            areaList,
+            item,
+            conversionChange
         };
     },
 };
@@ -126,9 +176,9 @@ export default {
 }
 .drop {
     width: 100%;
-    padding: 10px;
+    padding: 10px 0 0 20px;
     display: flex;
-    justify-content: space-between;
+    // justify-content: space-between;
     flex-wrap: wrap;
     box-sizing: border-box;
 
@@ -146,7 +196,7 @@ export default {
         }
         .active {
             border: 1px solid rgb(241, 110, 110);
-            color:rgb(241, 110, 110);
+            color: rgb(241, 110, 110);
         }
         &:nth-child(4n) {
             margin-right: 0;

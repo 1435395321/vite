@@ -11,6 +11,9 @@ import Detail from '../views/Detail.vue'
 import City from '../views/City.vue'
 import Search from '../views/Search.vue'
 import Consult from '../views/Consult.vue'
+import Login from '../views/Login.vue';
+import Setting from '../views/Centers/Setting.vue';
+
 const router = createRouter({
     history: createWebHashHistory(), // hash模式：createWebHashHistory，history模式：createWebHistory
     routes: [{
@@ -34,10 +37,6 @@ const router = createRouter({
                 index: 2
             }
         },
-        // {
-        //     path:'/detail',
-        //     component:Detail
-        // },
         {
             path: '/film',
             component: Film,
@@ -90,6 +89,22 @@ const router = createRouter({
             component: Consult,
             meta: {
                 index: 1
+            }
+        },
+        {
+            path: '/login',
+            name: 'Login',
+            component: Login,
+            meta: {
+                index: 2
+            }
+        },
+        {
+            path: '/center/setting',
+            name: 'Setting',
+            component: Setting,
+            meta: {
+                index: 2
             }
         },
         {
