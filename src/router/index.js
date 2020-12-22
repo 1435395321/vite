@@ -13,7 +13,7 @@ import Search from '../views/Search.vue'
 import Consult from '../views/Consult.vue'
 import Login from '../views/Login.vue';
 import Setting from '../views/Centers/Setting.vue';
-
+import Ticket from '../views/Centers/Ticket.vue'
 const router = createRouter({
     history: createWebHashHistory(), // hash模式：createWebHashHistory，history模式：createWebHistory
     routes: [{
@@ -107,6 +107,15 @@ const router = createRouter({
                 index: 2
             }
         },
+        {
+            path: '/center/ticket',
+            name: 'Ticket',
+            component: Ticket,
+            meta: {
+                index: 2
+            }
+        },
+        
         {
             path: '/:pathMatch(.*)*',
             name: '/film',
