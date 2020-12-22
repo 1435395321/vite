@@ -22,9 +22,12 @@ export default {
     setToken(state,token) {
         state.token = token;
     },
+    // 设置标题
+    setNavTitle(state,title) {
+        state.navTitle = title
+    },
     // 判断是否有token
     isToken(state,parm) {
-        console.log(state.token)
         if(state.token == '') {
             parm.router.push('/login');
         }else {

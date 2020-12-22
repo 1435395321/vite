@@ -1,5 +1,5 @@
 <template>
-    <div class="warp">
+    <div>
         <div class="top-login">
             <div @click="login">
                 <img src="/@/assets/img/profile.jpg" class="top-img" />
@@ -73,11 +73,11 @@ export default {
             });
         // 优惠券
         const ticket = () => {
-            commit("isToken", { path: "/ticket", router: router });
+            commit("isToken", { path: "/LayoutCenter/ticket", router: router });
         };
         // 设置
         const setting = () => {
-            commit("isToken", { path: "/center/setting", router: router });
+            commit("isToken", { path: "/LayoutCenter/setting", router: router });
         };
         // 登录
         const login = () => {

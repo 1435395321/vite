@@ -13,7 +13,7 @@
 
 <script>
 import TabBar from "./components/TabBar.vue";
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useStore, mapState } from "vuex";
 export default {
     name: "App",
@@ -43,7 +43,7 @@ export default {
         const isShowTab = computed(() => {
             return store.state.isShowTab;
         });
-        return { 
+        return {
             isShowTab,
         };
     },
@@ -63,6 +63,9 @@ a {
 li {
     list-style: none;
 }
+#app {
+    
+}
 .router-view {
     width: 100%;
     height: auto;
@@ -79,24 +82,28 @@ li {
 .slide-left-leave-active {
     height: 100%;
     will-change: transform;
-    transition: .5s;
+    transition: all 500ms;
     position: absolute;
     backface-visibility: hidden;
 }
 .slide-right-enter {
-    opacity: .3;
-    transform: translate3d(0, -20%, 0);
+    opacity: 0;
+    transform: translate3d(-100%, 0, 0);
 }
 .slide-right-leave-active {
-    opacity: .3;
-    transform: translate3d(0, 20%, 0);
+    opacity: 0;
+    transform: translate3d(100%, 0, 0);
 }
 .slide-left-enter {
-    opacity: .3;
-    transform: translate3d(0, 20%, 0);
+    opacity: 0;
+    transform: translate3d(100%, 0, 0);
 }
 .slide-left-leave-active {
-    opacity: .3;
-    transform: translate3d(0, -20%, 0);
+    opacity: 0;
+    transform: translate3d(-100%, 0, 0);
+}
+
+.van-badge--fixed {
+    z-index: 1000;
 }
 </style>

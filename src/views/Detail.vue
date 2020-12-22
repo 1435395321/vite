@@ -115,6 +115,7 @@ export default {
 <style scoped lang="scss">
 .warp {
     padding: 0 10px;
+    box-sizing: border-box;
 }
 .img {
     height: 200px;

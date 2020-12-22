@@ -10,17 +10,18 @@
 
 <script>
 import { useRouter } from "vue-router";
+import {useStore} from 'vuex'
 export default {
     name: "NavBar",
-    props: {
-        title: String,
-    },
-    setup(props) {
+    setup() {
+        const {state} = useStore();
         const router = useRouter();
+        const title = state.navTitle;
         const onClickLeft = () => {
             router.go(-1);
         };
         return {
+            title,
             onClickLeft,
         };
     },

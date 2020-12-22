@@ -3,5 +3,6 @@ export default {
     cityName:"上海",
     isShowTab:true,
     cinemaList: [],
-    token:''
+    token:'',
+    navTitle:'标题'
 }

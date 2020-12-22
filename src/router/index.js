@@ -14,12 +14,14 @@ import Consult from '../views/Consult.vue'
 import Login from '../views/Login.vue';
 import Setting from '../views/Centers/Setting.vue';
 import Ticket from '../views/Centers/Ticket.vue'
+import LayoutCenter from '../views/LayoutCenter.vue'
 const router = createRouter({
     history: createWebHashHistory(), // hash模式：createWebHashHistory，history模式：createWebHistory
     routes: [{
             path: '/',
             redirect: '/film'
         },
+
         {
             path: '/center',
             name: 'Center',
@@ -27,6 +29,31 @@ const router = createRouter({
             meta: {
                 index: 1
             }
+        },
+        {
+            path: '/LayoutCenter',
+            name: 'LayoutCenter',
+            component: LayoutCenter,
+            meta: {
+                index: 2
+            },
+            children: [{
+                    path: 'setting',
+                    name: 'Setting',
+                    component: Setting,
+                    meta: {
+                        index: 3
+                    }
+                },
+                {
+                    path: 'ticket',
+                    name: 'Ticket',
+                    component: Ticket,
+                    meta: {
+                        index: 3
+                    }
+                },
+            ]
         },
         {
             path: '/detail/:myid', //动态路由
@@ -99,23 +126,7 @@ const router = createRouter({
                 index: 2
             }
         },
-        {
-            path: '/center/setting',
-            name: 'Setting',
-            component: Setting,
-            meta: {
-                index: 2
-            }
-        },
-        {
-            path: '/center/ticket',
-            name: 'Ticket',
-            component: Ticket,
-            meta: {
-                index: 2
-            }
-        },
-        
+
         {
             path: '/:pathMatch(.*)*',
             name: '/film',
