@@ -1,5 +1,5 @@
 <template>
-    <div class="home-header">
+    <van-sticky class="home-header">
         <ul>
             <li>
                 <router-link to="/film/comingsong" active-class="active-li"
@@ -12,40 +12,37 @@
                 >
             </li>
         </ul>
-    </div>
+    </van-sticky>
 </template>
 
 <script>
+import { ref } from "vue";
 export default {
     name: "FilmHeader",
+    setup() {
+    },
 };
 </script>
 
-<style scope lang="scss">
-.home-header {
+<style scoped lang="scss">
+ul {
     width: 100%;
-    position: sticky;
-    top: 0px;
-    background: #fff !important;
-    z-index: 99;
-    ul {
-        width: 100%;
-        margin: 0 auto;
-        display: flex;
+    margin: 0 auto;
+    display: flex;
+    background: #fff;
+    li {
+        flex: 1;
+        text-align: center;
 
-        li {
-            flex: 1;
-            text-align: center;
-
-            a {
-                width: 40%;
-                display: block;
-                line-height: 40px;
-                margin: auto;
-            }
+        a {
+            width: 40%;
+            display: block;
+            line-height: 40px;
+            margin: auto;
         }
     }
 }
+
 .active-li {
     position: static;
     top: 0;

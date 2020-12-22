@@ -63,9 +63,6 @@ a {
 li {
     list-style: none;
 }
-#app {
-    
-}
 .router-view {
     width: 100%;
     height: auto;

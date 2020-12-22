@@ -19,7 +19,7 @@
         </van-row>
         <!-- 菜单 -->
         <div class="menu">
-            <div class="menu-list van-hairline--bottom" @click="ticket">
+            <div class="menu-list van-hairline--bottom" @click="hangleSkip('ticket')">
                 <div class="menu-left">
                     <van-icon name="send-gift-o" color="#ff8462" />
                     <div>卖座券</div>
@@ -28,7 +28,7 @@
                     <van-icon name="arrow" color="#e7e8ea" />
                 </div>
             </div>
-            <div class="menu-list van-hairline--bottom">
+            <div class="menu-list van-hairline--bottom" @click="hangleSkip('packet')">
                 <div class="menu-left">
                     <van-icon name="cash-on-deliver" color="#baa27a" />
                     <div>红包组合</div>
@@ -37,7 +37,7 @@
                     <van-icon name="arrow" color="#e7e8ea" />
                 </div>
             </div>
-            <div class="menu-list van-hairline--bottom">
+            <div class="menu-list van-hairline--bottom" @click="hangleSkip('balance')">
                 <div class="menu-left">
                     <van-icon name="balance-o" color="#ffc057" />
                     <div>余额</div>
@@ -46,7 +46,7 @@
                     <van-icon name="arrow" color="#e7e8ea" />
                 </div>
             </div>
-            <div class="menu-list van-hairline--bottom" @click="setting">
+            <div class="menu-list van-hairline--bottom" @click="hangleSkip('setting')">
                 <div class="menu-left">
                     <van-icon name="setting-o" color="#bcce58" />
                     <div>设置</div>
@@ -71,13 +71,9 @@ export default {
             data = reactive({
                 token: state.token,
             });
-        // 优惠券
-        const ticket = () => {
-            commit("isToken", { path: "/LayoutCenter/ticket", router: router });
-        };
-        // 设置
-        const setting = () => {
-            commit("isToken", { path: "/LayoutCenter/setting", router: router });
+        // 跳转
+        const hangleSkip = (e) => {
+            commit("isToken", { path: "/LayoutCenter/"+e, router: router });
         };
         // 登录
         const login = () => {
@@ -86,9 +82,8 @@ export default {
         };
         return {
             ...toRefs(data),
-            ticket,
             login,
-            setting,
+            hangleSkip,
         };
     },
 };

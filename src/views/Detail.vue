@@ -1,63 +1,69 @@
 <template>
-    <div v-if="filmInfo" class="warp">
+    <div v-if="filmInfo">
         <detail-header :title="filmInfo.name"></detail-header>
         <div
             class="img"
             :style="{ backgroundImage: 'url(' + filmInfo.poster + ')' }"
-        ></div>
-        <h3>{{ filmInfo.name }}-{{ filmInfo.filmType.name }}</h3>
-        <div>{{ filmInfo.category }}</div>
-        <div>{{ filmInfo.premiereAt }}</div>
-        <div>{{ filmInfo.nation }} | {{ filmInfo.runtime }}分钟</div>
-        <div :class="isShow ? 'synopsisShow' : 'synopsis'">
-            {{ filmInfo.synopsis }}
-        </div>
-        <div class="icon">
+        >
             <van-icon
-                @click="more"
-                :name="isShow ? 'arrow-up' : 'arrow-down'"
+                class="back-icon"
+                name="arrow-left"
+                color="rgb(67 68 69)"
+                size="22"
+                @click="back"
             />
         </div>
-        <h4 class="action">演职人员</h4>
-        <van-swipe :loop="false" :width="130" :show-indicators="false">
-            <van-swipe-item
-                v-for="(item, index) in filmInfo.actors"
-                class="swipe"
-                :key="index"
+        <div class="warp">
+            <h3>{{ filmInfo.name }}-{{ filmInfo.filmType.name }}</h3>
+            <div>{{ filmInfo.category }}</div>
+            <div>{{ filmInfo.premiereAt }}</div>
+            <div>{{ filmInfo.nation }} | {{ filmInfo.runtime }}分钟</div>
+            <div :class="isShow ? 'synopsisShow' : 'synopsis'">
+                {{ filmInfo.synopsis }}
+            </div>
+            <div class="icon">
+                <van-icon
+                    @click="more"
+                    :name="isShow ? 'arrow-up' : 'arrow-down'"
+                />
+            </div>
+            <h4 class="action">演职人员</h4>
+            <van-swipe :loop="false" :width="130" :show-indicators="false">
+                <van-swipe-item
+                    v-for="(item, index) in filmInfo.actors"
+                    class="swipe"
+                    :key="index"
+                >
+                    <img class="swiper-img" :src="item.avatarAddress" />
+                    <div class="swiper-text">{{ item.name }}</div>
+                    <div class="swiper-text">{{ item.role }}</div>
+                </van-swipe-item>
+            </van-swipe>
+            <h4 class="action">剧照</h4>
+            <van-swipe :loop="false" :width="130" :show-indicators="false">
+                <van-swipe-item
+                    v-for="(item, index) in filmInfo.photos"
+                    class="swipe"
+                    :key="index"
+                    @click="handlImg(index)"
+                >
+                    <img class="swiper-img" :src="item" />
+                </van-swipe-item>
+            </van-swipe>
+            <div class="zhanwei"></div>
+            <van-button class="bootm-btn" square type="warning" color="#ff5f16"
+                >选座购票</van-button
             >
-                <img class="swiper-img" :src="item.avatarAddress" />
-                <div class="swiper-text">{{ item.name }}</div>
-                <div class="swiper-text">{{ item.role }}</div>
-            </van-swipe-item>
-        </van-swipe>
-        <h4 class="action">剧照</h4>
-        <van-swipe :loop="false" :width="130" :show-indicators="false">
-            <van-swipe-item
-                v-for="(item, index) in filmInfo.photos"
-                class="swipe"
-                :key="index"
-                @click="handlImg(index)"
-            >
-                <img class="swiper-img" :src="item" />
-            </van-swipe-item>
-        </van-swipe>
+        </div>
     </div>
 </template>
 <script>
-import {
-    onMounted,
-    getCurrentInstance,
-    ref,
-    computed,
-    reactive,
-    toRefs,
-    onUnmounted,
-} from "vue";
-import { useRoute } from "vue-router";
+import { onMounted, reactive, toRefs, onUnmounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import http from "/@/utils/https";
 import DetailHeader from "./Detail/DetailHeader.vue";
 import { ImagePreview } from "vant";
-import { useStore,mapState } from "vuex";
+import { useStore, mapState } from "vuex";
 export default {
     name: "Detail",
     components: {
@@ -65,6 +71,7 @@ export default {
     },
     setup() {
         const route = useRoute();
+        const router = useRouter();
         const store = useStore();
         const id = route.params.myid;
         const data = reactive({
@@ -89,6 +96,9 @@ export default {
                 data.isShow = true;
             }
         };
+        const back = () => {
+            router.go(-1);
+        };
         // 预览图片
         const handlImg = (index) => {
             ImagePreview({
@@ -108,6 +118,7 @@ export default {
             ...toRefs(data),
             more,
             handlImg,
+            back,
         };
     },
 };
@@ -121,6 +132,14 @@ export default {
     height: 200px;
     background-size: cover;
     background-position: center;
+}
+.back-icon {
+    width: 30px;
+    background: rgb(128 128 128);
+    border-radius: 50%;
+    text-align: center;
+    line-height: 30px;
+    margin: 5px 0 0 5px;
 }
 .synopsis {
     height: 38px;
@@ -153,5 +172,18 @@ export default {
 }
 .action {
     margin: 5px 0;
+}
+.zhanwei {
+    width: 100%;
+    height: 50px;
+    margin-top: 10px;
+}
+.bootm-btn {
+    width: 100%;
+    line-height: 50px;
+    font-size: 16px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
 }
 </style>

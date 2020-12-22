@@ -14,6 +14,8 @@ import Consult from '../views/Consult.vue'
 import Login from '../views/Login.vue';
 import Setting from '../views/Centers/Setting.vue';
 import Ticket from '../views/Centers/Ticket.vue'
+import Packet from '../views/Centers/Packet.vue'
+import Balance from '../views/Centers/Balance.vue'
 import LayoutCenter from '../views/LayoutCenter.vue'
 const router = createRouter({
     history: createWebHashHistory(), // hash模式：createWebHashHistory，history模式：createWebHistory
@@ -49,6 +51,22 @@ const router = createRouter({
                     path: 'ticket',
                     name: 'Ticket',
                     component: Ticket,
+                    meta: {
+                        index: 3
+                    }
+                },
+                {
+                    path: 'packet',
+                    name: 'packet',
+                    component: Packet,
+                    meta: {
+                        index: 3
+                    }
+                },
+                {
+                    path: 'balance',
+                    name: 'Balance',
+                    component: Balance,
                     meta: {
                         index: 3
                     }
