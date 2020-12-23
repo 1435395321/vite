@@ -9,9 +9,8 @@ export default {
                 "X-Host": "mall.film-ticket.cinema.list",
             },
         }).then((res) => {
-            console.log(res.data.data.cinemas.length)
             res.data.data.cinemas.forEach(item => {
-                let money = item.lowPrice/100
+                let money = item.lowPrice / 100
                 item.lowPrice = money.toFixed(2)
             });
             commit('setCinmaList', res.data.data.cinemas)

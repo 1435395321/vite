@@ -27,7 +27,7 @@
                         </p>
                         <p>{{ item.nation }} | {{ item.runtime }}分钟</p>
                     </div>
-                    <div>购买</div>
+                    <div @click="purchase(item.filmId)">购买</div>
                 </a>
             </van-cell>
         </van-list>
@@ -38,7 +38,7 @@
 import { defineComponent, reactive, computed, ref } from "vue";
 import http from "/@/utils/https";
 import { useRouter } from "vue-router";
-import { useStore  } from "vuex";
+import { useStore } from "vuex";
 export default {
     name: "Comingsong",
     setup() {
@@ -52,7 +52,7 @@ export default {
         });
         const store = useStore();
         const onLoad = () => {
-            state.current ++;
+            state.current++;
             // 异步更新数据
             // setTimeout 仅做示例，真实场景中一般为 ajax 请求
             http({
@@ -61,19 +61,23 @@ export default {
                     "X-Host": "mall.film-ticket.film.list",
                 },
             }).then((res) => {
-                let data = res.data.data
-                state.list = [...state.list,...data.films];
+                let data = res.data.data;
+                state.list = [...state.list, ...data.films];
                 state.loading = false;
-                if(state.list.length>=data.total){
+                if (state.list.length >= data.total) {
                     state.finished = true;
                 }
             });
         };
         const router = useRouter();
+        const purchase = (e) => {
+            router.push(`/detail/${e}`)
+        }
         const detail = (e) => {
             router.push(`/detail/${e}`);
         };
         return {
+            purchase,
             state,
             onLoad,
             detail,

@@ -51,8 +51,7 @@
                 </van-swipe-item>
             </van-swipe>
             <div class="zhanwei"></div>
-            <van-button class="bootm-btn" square type="warning" color="#ff5f16"
-                >选座购票</van-button
+            <van-button class="bootm-btn" square type="warning" color="#ff5f16" @click="hangleCinema(filmInfo.filmId)">选座购票</van-button
             >
         </div>
     </div>
@@ -114,11 +113,15 @@ export default {
         onUnmounted(() => {
             store.commit("showTab");
         });
+        const hangleCinema = (e) => {
+            router.push(`/cinema/${e}`)
+        }
         return {
             ...toRefs(data),
             more,
             handlImg,
             back,
+            hangleCinema
         };
     },
 };

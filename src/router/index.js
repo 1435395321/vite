@@ -17,6 +17,7 @@ import Ticket from '../views/Centers/Ticket.vue'
 import Packet from '../views/Centers/Packet.vue'
 import Balance from '../views/Centers/Balance.vue'
 import LayoutCenter from '../views/LayoutCenter.vue'
+import CinemaDetail from '../views/CinemaDetail.vue'
 const router = createRouter({
     history: createWebHashHistory(), // hash模式：createWebHashHistory，history模式：createWebHistory
     routes: [{
@@ -102,9 +103,8 @@ const router = createRouter({
                 },
             ]
         },
-
         {
-            path: '/cinema',
+            path: '/cinema/:id?',
             name: 'Cinema',
             component: Cinema,
             meta: {
@@ -116,6 +116,14 @@ const router = createRouter({
             path: '/cinema/search',
             name: 'Search',
             component: Search,
+            meta: {
+                index: 2
+            }
+        },
+        {
+            path: '/cinema/cinemadetail/:id',
+            name: 'CinemaDetail',
+            component: CinemaDetail,
             meta: {
                 index: 2
             }

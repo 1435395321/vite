@@ -1,20 +1,40 @@
 <template>
     <div>
+        <!-- 头部导航 -->
         <van-nav-bar
             title="影院"
-            @click-left="hangLeft()"
+            @click-left="hangLeft(filmid)"
             @click-right="hangRight()"
         >
-            <template #left>
+            <template #left v-if="filmid == ''">
                 <span>{{ cityName }}</span>
                 <van-icon name="arrow-down" size="12" color="#333" />
+            </template>
+            <template #left v-else>
+                <van-icon name="arrow-left" size="22" color="#333" />
             </template>
             <template #right>
                 <van-icon name="search" size="22" color="#333" />
             </template>
         </van-nav-bar>
+        <!-- 日期选项卡 -->
+        <van-tabs
+            v-model:active="active"
+            swipeable
+            background="white"
+            v-if="filmid"
+            title-active-color="#ff5f16"
+            style="z-index: 9"
+        >
+            <van-tab
+                title="标签 1"
+                v-for="(item, index) in dateList.showCinemas"
+                :key="index"
+            ></van-tab>
+        </van-tabs>
+        <!-- 下拉单 -->
         <van-dropdown-menu>
-            <van-dropdown-item title="全城" ref="item">
+            <van-dropdown-item :title="areaName" ref="item">
                 <div class="drop">
                     <div
                         class="drop-list"
@@ -39,13 +59,19 @@
         </van-dropdown-menu>
         <div class="cinema" :style="{ height: height }">
             <ul>
-                <li v-for="(item,index) in cinemaList" :key="index">
+                <li
+                    v-for="(item, index) in cinemaList"
+                    :key="index"
+                    @click="cinmaDetail(item.districtId)"
+                >
                     <div class="top common">
                         <p>{{ item.name }}</p>
                         <p class="price">{{ item.lowPrice }}起</p>
                     </div>
                     <div class="bottom common">
-                        <p class="address van-ellipsis">{{ item.address }}</p>
+                        <p class="address van-ellipsis">
+                            {{ item.address }}
+                        </p>
                         <p>距离未知</p>
                     </div>
                 </li>
@@ -58,18 +84,23 @@
 import { computed, nextTick, reactive, toRefs, ref } from "vue";
 import http from "/@/utils/https";
 import betterScroll from "better-scroll";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { useStore, mapState } from "vuex";
 import { arrayToHeavy } from "/@/components/common";
-import { Search } from 'vant';
+import { Search } from "vant";
 export default {
     name: "Cinema",
     setup() {
         const router = useRouter();
+        const { params } = useRoute();
+        const store = useStore();
         const item = ref(null);
         const data = reactive({
-            cityName:'',
-            height: 0,
+            filmid: params.id,
+            cityName: store.state.cityName,
+            dateList: [],
+            active: 0,
+            height: document.documentElement.clientHeight - 150 + "px",
             value: 0,
             value1: 0,
             option: [
@@ -81,77 +112,97 @@ export default {
                 { text: "距离最近", value: 1 },
             ],
             activeIdx: 0,
-            areaName: "",
+            arr: [],
+            areaName: "全城",
         });
-        const store = useStore();
-        data.cityName = store.state.cityName;
-        data.height = document.documentElement.clientHeight - 148 + "px";
-        if (store.state.cinemaList.length == 0) {
-            let data = {cityId:store.state.cityId,index:1}
-            store.dispatch("getCinema", data).then((res) => {
-                // better 优化流畅加载大数量数据
-                nextTick(() => {
-                    const better = new betterScroll(".cinema", {
-                        scrollbar: {
-                            fade: true,
-                        },
-                    });
-                });
-            });
-        } else {
+
+        // 判断是否请求数据
+        const param = { cityId: store.state.cityId, index: 1 };
+        store.dispatch("getCinema", param).then((res) => {
+            // better 优化流畅加载大数量数据
             nextTick(() => {
                 const better = new betterScroll(".cinema", {
                     scrollbar: {
                         fade: true,
                     },
+                    click: true,
                 });
             });
-        }
-        const cinemaList = computed(() => {
-            // 搜索全部
-            if (data.areaName == "全城") {
-                return store.state.cinemaList;
-            }
-            // 搜索
-            return store.state.cinemaList.filter((item) =>
-                item.districtName.includes(data.areaName)
-            );
         });
+
+        // 请求实现选项卡数据
+        if (data.filmid) {
+            store.commit("hideTab");
+            http({
+                url: `gateway/?filmId=${data.filmid}&cityId=${store.state.cityId}&k=8031962`,
+                headers: {
+                    "X-Host": "mall.film-ticket.cinema.film-show-cinema",
+                },
+            }).then((res) => {
+                data.dateList = res.data.data;
+                store.commit("cinemaDate", data.dateList.cinemaExtendList);
+            });
+        }
+
         const dropListOne = (value, list) => {
             // 赋值 选中
             data.activeIdx = value;
             // 赋值
             data.areaName = list;
             // 选择关闭
-            item.value.toggle()
-           
+            item.value.toggle();
         };
+
         // 区域筛选
-        let arr = [];
         // 全程下拉单赋值
         const areaList = computed(() => {
             cinemaList.value.forEach((item) => {
-                arr.push(item.districtName);
-                arr.unshift("全城");
+                data.arr.push(item.districtName);
+                data.arr.unshift("全城");
             });
-            return arrayToHeavy(arr);
+            return arrayToHeavy(data.arr);
         });
+
         // 第二个下拉单事件
         const conversionChange = (value) => {
-            let index = value+1;
-            let data = {cityId:store.state.cityId,index}
-            store.dispatch('getCinema',data)
-        }
-        //地址跳转
-        const hangLeft = () => {
-            // 清空cinemaList
-            store.commit("cinemaEmpty");
-            router.push("/city");
+            let index = value + 1;
+            let data = { cityId: store.state.cityId, index };
+            store.dispatch("getCinema", data);
         };
+
+        // 计算 电影院列表
+        const cinemaList = computed(() => {
+            // 搜索全部
+            if (data.areaName == "全城") {
+                return store.state.cinemaList;
+            } else {
+                // 下拉搜索
+                return store.state.cinemaList.filter((item) =>
+                    item.districtName.includes(data.areaName)
+                );
+            }
+        });
+
+        //地址跳转
+        const hangLeft = (e) => {
+            if (e == "") {
+                store.commit("cinemaEmpty");
+                router.push("/city");
+            }else{
+                router.go(-1)
+            }
+        };
+
+        // 电影院列表详情
+        const cinmaDetail = (e) => {
+            router.push(`/cinema/cinemadetail/${e}`);
+        };
+
         // 搜索跳转
         const hangRight = () => {
             router.push("/cinema/search");
         };
+
         return {
             cinemaList,
             ...toRefs(data),
@@ -160,7 +211,8 @@ export default {
             dropListOne,
             areaList,
             item,
-            conversionChange
+            conversionChange,
+            cinmaDetail,
         };
     },
 };

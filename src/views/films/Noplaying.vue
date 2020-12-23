@@ -11,10 +11,10 @@
         >
             <van-cell class="cell" v-for="item in state.list" :key="item">
                 <a>
-                    <div>
+                    <div @click="detail(item.filmId)">
                         <img :src="item.poster" />
                     </div>
-                    <div>
+                    <div @click="detail(item.filmId)">
                         <p class="coming-title">{{ item.name }}</p>
                         <p></p>
                         <p>
@@ -22,10 +22,10 @@
                             <span
                                 v-for="(list, index) in item.actors"
                                 :key="index"
-                                >{{ list.name }}</span
-                            >
+                                >{{ list.name }}
+                            </span>
                         </p>
-                        <p>{{ item.nation }} | {{ item.runtime }}分钟</p>
+                        <p>上映日期：{{ item.premiereAt }}</p>
                     </div>
                     <div>购买</div>
                 </a>
@@ -37,7 +37,10 @@
 <script>
 import { reactive } from "vue";
 import Http from "/@/utils/https";
-import { useStore } from 'vuex';
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+import { week } from "/@/components/date";
+import { compareAsc, format } from "date-fns";
 export default {
     name: "Noplaying",
     setup() {
@@ -48,13 +51,18 @@ export default {
             current: 0,
         });
         const store = useStore();
+        const router = useRouter();
         const onLoad = () => {
             state.current++;
             // 异步更新数据
             // setTimeout 仅做示例，真实场景中一般为 ajax 请求
             Http({
                 url:
-                    "gateway?cityId="+store.state.cityId+"&pageNum="+state.current+"&pageSize=10&type=2&k=4218412",
+                    "gateway?cityId=" +
+                    store.state.cityId +
+                    "&pageNum=" +
+                    state.current +
+                    "&pageSize=10&type=2&k=4218412",
                 headers: {
                     "X-Host": "mall.film-ticket.film.list",
                 },
@@ -65,10 +73,22 @@ export default {
                 if (state.list.length === data.total) {
                     state.finished = true;
                 }
+                data.films.forEach((item) => {
+                    let set = format(new Date(item.premiereAt * 1000),"周c MM月dd日");
+                    item.premiereAt = week(set);
+                });
             });
         };
-
+        //补位，如果为单数，则在前面加0
+        const formatNumber = (n) => {
+            n = n.toString();
+            return n[1] ? n : "0" + n;
+        };
+        const detail = (e) => {
+            router.push(`/detail/${e}`);
+        };
         return {
+            detail,
             state,
             onLoad,
         };
