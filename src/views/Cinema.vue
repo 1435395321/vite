@@ -65,7 +65,7 @@
                 <li
                     v-for="(item, index) in cinemaList"
                     :key="index"
-                    @click="cinmaDetail(item.districtId)"
+                    @click="cinmaDetail(item.cinemaId)"
                 >
                     <div class="top common">
                         <p>{{ item.name }}</p>
@@ -180,6 +180,7 @@ export default {
                 id: store.state.cityId,
                 cinemaIds: data.cinemaDateList[name],
             };
+            console.log(data.paramDate)
             store.dispatch("postDateList", data.paramDate);
         };
         const dropListOne = (value, list) => {

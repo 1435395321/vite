@@ -16,6 +16,7 @@ export default {
             commit('setCinmaList', res.data.data.cinemas)
         });
     },
+    // 时间选项卡 获取电影院数据
     postDateList({commit}, data) {
         data.cinemaIds = data.cinemaIds.toString()
         return http({

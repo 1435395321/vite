@@ -2,7 +2,7 @@
     <header>
         <van-nav-bar class="a" :title="title" @click-left="onClickLeft" v-top>
             <template #left>
-                <van-icon name="arrow-left" size="22" color="#333333" />
+                <van-icon name="arrow-left" size="22" color="#333333" class="left" />
             </template>
         </van-nav-bar>
     </header> 
@@ -37,5 +37,8 @@ export default {
         text-align: center;
         line-height: 30px;
         transition: .5s;
+    }
+    .left{
+        margin-left: -7px;
     }
 </style>
