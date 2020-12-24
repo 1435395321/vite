@@ -25,9 +25,12 @@
             v-if="filmid"
             title-active-color="#ff5f16"
             style="z-index: 9"
+            :ellipsis="false"
+            line-width="90px"
+            @click="hangleDate"
         >
             <van-tab
-                title="标签 1"
+                :title="item.showDate"
                 v-for="(item, index) in dateList.showCinemas"
                 :key="index"
             ></van-tab>
@@ -81,13 +84,15 @@
 </template>
 
 <script>
-import { computed, nextTick, reactive, toRefs, ref } from "vue";
+import { computed, nextTick, reactive, toRefs, ref, onMounted } from "vue";
 import http from "/@/utils/https";
 import betterScroll from "better-scroll";
 import { useRouter, useRoute } from "vue-router";
 import { useStore, mapState } from "vuex";
 import { arrayToHeavy } from "/@/components/common";
 import { Search } from "vant";
+import { format } from "date-fns";
+import { week } from "/@/components/date.js";
 export default {
     name: "Cinema",
     setup() {
@@ -98,7 +103,6 @@ export default {
         const data = reactive({
             filmid: params.id,
             cityName: store.state.cityName,
-            dateList: [],
             active: 0,
             height: document.documentElement.clientHeight - 150 + "px",
             value: 0,
@@ -114,36 +118,70 @@ export default {
             activeIdx: 0,
             arr: [],
             areaName: "全城",
+            dateList: [],
+            cinemaDateList: [],
+            paramDate: {},
         });
-
+        onMounted(() => {
+            if (data.filmid) {
+                store.commit("hideTab");
+            }
+            getCinemaList();
+            getDateList();
+        });
         // 判断是否请求数据
-        const param = { cityId: store.state.cityId, index: 1 };
-        store.dispatch("getCinema", param).then((res) => {
-            // better 优化流畅加载大数量数据
-            nextTick(() => {
-                const better = new betterScroll(".cinema", {
-                    scrollbar: {
-                        fade: true,
-                    },
-                    click: true,
+        const getCinemaList = () => {
+            const param = { cityId: store.state.cityId, index: 1 };
+            store.dispatch("getCinema", param).then((res) => {
+                // better 优化流畅加载大数量数据
+                nextTick(() => {
+                    const better = new betterScroll(".cinema", {
+                        scrollbar: {
+                            fade: true,
+                        },
+                        click: true,
+                    });
                 });
             });
-        });
+        };
 
         // 请求实现选项卡数据
-        if (data.filmid) {
-            store.commit("hideTab");
-            http({
-                url: `gateway/?filmId=${data.filmid}&cityId=${store.state.cityId}&k=8031962`,
-                headers: {
-                    "X-Host": "mall.film-ticket.cinema.film-show-cinema",
-                },
-            }).then((res) => {
-                data.dateList = res.data.data;
-                store.commit("cinemaDate", data.dateList.cinemaExtendList);
-            });
-        }
+        const getDateList = () => {
+            if (data.filmid) {
+                http({
+                    url: `gateway/?filmId=${data.filmid}&cityId=${store.state.cityId}&k=8031962`,
+                    headers: {
+                        "X-Host": "mall.film-ticket.cinema.film-show-cinema",
+                    },
+                }).then((res) => {
+                    data.dateList = res.data.data;
+                    // 日期转换格式
+                    data.dateList.showCinemas.forEach((item) => {
+                        let set = format(
+                            new Date(item.showDate * 1000),
+                            "周c MM月dd日"
+                        );
+                        item.showDate = week(set);
+                        data.cinemaDateList.push(item.cinemaList);
+                    });
+                    // 再次请求默认赋值请求日期当天的数据
+                    data.paramDate = {
+                        id: store.state.cityId,
+                        cinemaIds: data.cinemaDateList[0],
+                    };
+                    store.dispatch("postDateList", data.paramDate);
+                });
+            }
+        };
 
+        // 日期点击获取
+        const hangleDate = (name) => {
+            data.paramDate = {
+                id: store.state.cityId,
+                cinemaIds: data.cinemaDateList[name],
+            };
+            store.dispatch("postDateList", data.paramDate);
+        };
         const dropListOne = (value, list) => {
             // 赋值 选中
             data.activeIdx = value;
@@ -188,8 +226,8 @@ export default {
             if (e == "") {
                 store.commit("cinemaEmpty");
                 router.push("/city");
-            }else{
-                router.go(-1)
+            } else {
+                router.go(-1);
             }
         };
 
@@ -213,6 +251,7 @@ export default {
             item,
             conversionChange,
             cinmaDetail,
+            hangleDate,
         };
     },
 };

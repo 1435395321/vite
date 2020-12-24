@@ -9,13 +9,17 @@
 <script>
 import FilmHeader from "./films/FilmHeader.vue";
 import Pager from "../components/Pager.vue";
+import { useStore } from "vuex";
 export default {
     name: "Film",
     components: {
         FilmHeader,
         Pager,
     },
-    setup() {},
+    setup() {
+        const { commit } = useStore();
+        commit('showTab')
+    },
 };
 </script>
 

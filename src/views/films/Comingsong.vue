@@ -71,7 +71,7 @@ export default {
         };
         const router = useRouter();
         const purchase = (e) => {
-            router.push(`/detail/${e}`)
+            router.push(`/cinema/${e}`)
         }
         const detail = (e) => {
             router.push(`/detail/${e}`);

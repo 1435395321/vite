@@ -16,4 +16,18 @@ export default {
             commit('setCinmaList', res.data.data.cinemas)
         });
     },
+    postDateList({commit}, data) {
+        data.cinemaIds = data.cinemaIds.toString()
+        return http({
+            url:`https://m.maizuo.com/gateway?k=7218818`,
+            data:data,
+            headers:{
+                'X-Host': 'mall.film-ticket.cinema.batch-cinema'
+            },
+            method:"POST"
+        }).then(res=> {
+            let result = res.data.data.cinemas;
+            commit('setCinmaList',result)
+        })
+    }
 }

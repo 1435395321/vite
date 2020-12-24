@@ -7,7 +7,6 @@ export default {
     },
     // 隐藏Tab
     hideTab(state) {
-        console.log(11)
         state.isShowTab = false;
     },
     // 显示Tab
@@ -25,18 +24,6 @@ export default {
     // 清空影院
     cinemaEmpty(state) {
         state.cinemaList = [];
-    },
-
-    cinemaDate(state,dateList){
-        let a= [];
-        dateList.forEach(list => {
-            state.cinemaList.forEach(item=> {
-                if(list.cinemaId == item.cinemaId){
-                   a.push(item)
-                }
-            })
-        });
-        state.cinemaList = a;
     },
     // 设置Token
     setToken(state,token) {
