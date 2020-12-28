@@ -63,6 +63,13 @@ a {
 li {
     list-style: none;
 }
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
+  height:100%;
+}
 .router-view {
     width: 100%;
     height: auto;
@@ -71,6 +78,7 @@ li {
     bottom: 0;
     margin: 0 auto;
     -webkit-overflow-scrolling: touch;
+    // overflow-x: hidden;
 }
 
 .slide-right-enter-active,

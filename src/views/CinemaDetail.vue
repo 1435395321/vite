@@ -3,9 +3,9 @@
         <div class="back">
             <van-icon name="arrow-left" size="22" color="333" @click="back" />
         </div>
-        <detail-header title="文化中心电影院"></detail-header>
+        <detail-header :title="filmDetail.name"></detail-header>
         <div class="title">{{ filmDetail.name }}</div>
-        <div class="explain" @click="serviceInfo">
+        <div class="explain" @click="serviceInfo" v-if="filmDetail.services">
             <p v-for="(item, index) in filmDetail.services" :key="index">
                 {{ item.name }}
             </p>
@@ -31,41 +31,25 @@
                         >
                             <img :src="item.poster" />
                         </div>
-                        <!-- <div class="swiper-slide">
-                            <img
-                                src="https://pic.maizuo.com/usr/movie/186370070413ba10d64a9e36264ca267.jpg"
-                            />
-                        </div>
-                        <div class="swiper-slide">
-                            <img
-                                src="https://pic.maizuo.com/usr/movie/186370070413ba10d64a9e36264ca267.jpg"
-                            />
-                        </div>
-                        <div class="swiper-slide">
-                            <img
-                                src="https://pic.maizuo.com/usr/movie/186370070413ba10d64a9e36264ca267.jpg"
-                            />
-                        </div>
-                        <div class="swiper-slide">
-                            <img
-                                src="https://pic.maizuo.com/usr/movie/186370070413ba10d64a9e36264ca267.jpg"
-                            />
-                        </div> -->
                     </div>
                 </div>
                 <div class="three">
-                    <img src="/@/assets/img/three.png" alt="" />
+                    <img src="/@/assets/img/three.png" />
                 </div>
             </div>
             <!-- 信息 -->
-            <div class="info">
+            <div class="info" @click="filmeDetail(filmeDetailOne.filmId)">
                 <div class="info-left">
                     <div class="info-top">
-                        <span>拆弹专家2</span>
-                        <span>8分</span>
+                        <span>{{ filmeDetailOne.name }} </span>
+                        <span>{{ filmeDetailOne.grade }}分</span>
                     </div>
                     <div class="info-bottom van-ellipsis">
-                        动作犯罪0分钟动作犯罪0分钟动作犯罪0分钟
+                        {{ filmeDetailOne.category }}|
+                        {{ filmeDetailOne.runtime }}分钟 | 
+                        <span v-for="(item,index) in filmeDetailOne.actors" :key="index">
+                            {{item.name}}
+                        </span>
                     </div>
                 </div>
                 <div class="info-right">
@@ -83,27 +67,34 @@
             style="z-index: 9"
             :ellipsis="false"
             line-width="90px"
+            @click="getFilmSiteList"
         >
-            <van-tab title="ddd"></van-tab>
-            <van-tab title="ddd"></van-tab>
-            <van-tab title="ddd"></van-tab>
+            <!-- 零是轮播图下表 -->
+            <van-tab
+                :title="item"
+                v-for="(item, index) in filmeDetailDate[0]"
+                :key="index"
+            ></van-tab>
         </van-tabs>
         <!-- 列表 -->
         <ul class="list">
-            <li>
+            <li v-for="(item, index) in filmSiteList" :key="index">
                 <div>
-                    <p>15:00</p>
-                    <p>15:00散场</p>
+                    <p>{{ item.showAt }}</p>
+                    <p>{{ item.endAt }}散场</p>
                 </div>
-                <div>
-                    <p>国语2D</p>
-                    <p>5号激光厅</p>
+                <div class="list-text">
+                    <p>{{ item.filmLanguage }}{{ item.imagery }}</p>
+                    <p>{{ item.hallName }}</p>
                 </div>
                 <div class="color">
-                    <p>￥43</p>
+                    <p>￥{{ item.salePrice }}</p>
                 </div>
-                <div class="color btn">
-                    <p>停售</p>
+                <div class="color btn" v-if="item.isOnsell" @click="buy(item.scheduleId)">
+                    <p>购票</p>
+                </div>
+                <div class="color btn" v-else>
+                    <p>停购</p>
                 </div>
             </li>
         </ul>
@@ -123,13 +114,14 @@
 </template>
 
 <script>
-import { reactive, toRefs, ref, onMounted, nextTick } from "vue";
+import { reactive, toRefs, ref, onMounted, nextTick, onUnmounted } from "vue";
 import DetailHeader from "./Detail/DetailHeader.vue";
 import { useRouter, useRoute } from "vue-router";
 import Swiper from "swiper/bundle";
 import "swiper/swiper-bundle.min.css";
 import { useStore } from "vuex";
 import http from "/@/utils/https";
+import { format } from "date-fns";
 export default {
     name: "CinmaDetail",
     components: {
@@ -138,7 +130,7 @@ export default {
     setup() {
         const router = useRouter();
         const { params } = useRoute();
-        const { state,commit } = useStore();
+        const { state, commit } = useStore();
         const data = reactive({
             filmInfo: "",
             show: false,
@@ -146,6 +138,8 @@ export default {
             cinemaId: params.id,
             filmDetail: [], //影院详情
             filmeDetailList: [], //电影详情
+            filmeDetailOne: [], //电影详情一条数据
+            filmeDetailDate: [],
             filmSiteList: [], //电影场列表
         });
 
@@ -175,6 +169,15 @@ export default {
                 },
             }).then((res) => {
                 data.filmeDetailList = res.data.data.films;
+                filmeDetailOne(0);
+                getFilmSiteList(0);
+                data.filmeDetailList.forEach((item) => {
+                    let arr = [];
+                    item.showDate.forEach((list) => {
+                        arr.push(format(new Date(list * 1000), "周c MM月dd日"));
+                    });
+                    data.filmeDetailDate.push(arr);
+                });
                 nextTick(() => {
                     const swiper = new Swiper(".swiper-container", {
                         slidesPerView: 4,
@@ -188,14 +191,48 @@ export default {
         const serviceInfo = () => {
             data.show = true;
         };
+        // e 轮播图的下标 电影的单条数据
+        const filmeDetailOne = (e) => {
+            data.filmeDetailOne = data.filmeDetailList[e];
+        };
+        // 电影城列表
+        const getFilmSiteList = (e) => {
+            let date = data.filmeDetailList[0].showDate;
+            http({
+                url: `gateway/?filmId=${data.filmeDetailOne.filmId}&cinemaId=${data.cinemaId}&date=${date[e]}&k=9346258`,
+                headers: {
+                    "X-Host": "mall.film-ticket.schedule.list",
+                },
+            }).then((res) => {
+                data.filmSiteList = res.data.data.schedules;
+                data.filmSiteList.forEach((item) => {
+                    item.showAt = format(new Date(item.showAt * 1000), "HH:mm");
+                    item.endAt = format(new Date(item.endAt * 1000), "HH:mm");
+                    item.salePrice = item.salePrice / 100;
+                });
+            });
+        };
+        // 购买
+        const buy = (e) => {
+            router.push(`/schedule/${e}`)
+        }
+        const filmeDetail = (id) => {
+            router.push(`/detail/${id}`)
+        }
         // 后退
         const back = () => {
             router.go(-1);
         };
+        onUnmounted(() => {
+           commit('showTab')
+        })
         return {
             ...toRefs(data),
             back,
             serviceInfo,
+            getFilmSiteList,
+            filmeDetail,
+            buy
         };
     },
 };
@@ -209,7 +246,7 @@ export default {
     text-align: center;
     color: rgb(50, 50, 51);
     font-weight: 500;
-    font-size: 17px;
+    font-size: 16px;
 }
 .explain {
     text-align: center;
@@ -305,6 +342,9 @@ export default {
             color: #797d82;
             font-size: 13px;
             text-align: center;
+            span{
+                margin-right: 3px;
+            }
         }
     }
 }
@@ -329,6 +369,9 @@ export default {
         .btn {
             padding: 3px;
             border: 1px solid chocolate;
+        }
+        .list-text{
+            width: 40%;
         }
     }
 }

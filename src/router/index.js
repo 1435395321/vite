@@ -18,6 +18,7 @@ import Packet from '../views/Centers/Packet.vue'
 import Balance from '../views/Centers/Balance.vue'
 import LayoutCenter from '../views/LayoutCenter.vue'
 import CinemaDetail from '../views/CinemaDetail.vue'
+import Schedule from '../views/Schedule.vue'
 const router = createRouter({
     history: createWebHashHistory(), // hash模式：createWebHashHistory，history模式：createWebHistory
     routes: [{
@@ -150,6 +151,14 @@ const router = createRouter({
             component: Login,
             meta: {
                 index: 2
+            }
+        },
+        {
+            path: '/schedule/:id',
+            name: 'Schedule',
+            component: Schedule,
+            meta: {
+                index: 3
             }
         },
 

@@ -37,6 +37,7 @@ export default {
         text-align: center;
         line-height: 30px;
         transition: .5s;
+        z-index: 9;
     }
     .left{
         margin-left: -7px;
