@@ -13,8 +13,8 @@
 
 <script>
 import TabBar from "./components/TabBar.vue";
-import { computed, onMounted, ref } from "vue";
-import { useStore, mapState } from "vuex";
+import { computed } from "vue";
+import { useStore } from "vuex";
 export default {
     name: "App",
     data() {
@@ -49,7 +49,7 @@ export default {
     },
 };
 </script>
-<style lang="scss" scope>
+<style lang="scss" >
 * {
     //  解决三百毫秒
     touch-action: manipulation;

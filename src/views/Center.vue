@@ -93,7 +93,7 @@ export default {
 .top-login {
     width: 100%;
     height: 180px;
-    background-image: url("/@/assets/img/bg.6837f67.png");
+    // background-image: url("/@/assets/img/bg.6837f67.png");
     background-size: 100% 100%;
     display: flex;
     align-items: center;

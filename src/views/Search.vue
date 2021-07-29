@@ -40,7 +40,7 @@ export default {
         const state = reactive({
             value: "",
         });
-        if (store.state.cinemaList.length == 0) {
+        if (store.state.cinemaList.length === 0) {
             store.dispatch("getCinema", store.state.cityId);
         }
         const onCancel = () => {

@@ -6,15 +6,15 @@
             @click-left="hangLeft(filmid)"
             @click-right="hangRight()"
         >
-            <template #left v-if="filmid == ''">
+            <template #left v-if="filmid === ''">
                 <span>{{ cityName }}</span>
-                <van-icon name="arrow-down" size="12" color="#333" />
+                <van-icon name="arrow-down" size="12" color="#333"/>
             </template>
             <template #left v-else>
-                <van-icon name="arrow-left" size="22" color="#333" />
+                <van-icon name="arrow-left" size="22" color="#333"/>
             </template>
             <template #right>
-                <van-icon name="search" size="22" color="#333" />
+                <van-icon name="search" size="22" color="#333"/>
             </template>
         </van-nav-bar>
         <!-- 日期选项卡 -->
@@ -58,7 +58,7 @@
                 :options="option"
                 @change="conversionChange"
             />
-            <van-dropdown-item v-model="value1" :options="option1" />
+            <van-dropdown-item v-model="value1" :options="option1"/>
         </van-dropdown-menu>
         <div class="cinema" :style="{ height: height }">
             <ul>
@@ -88,11 +88,11 @@ import { computed, nextTick, reactive, toRefs, ref, onMounted } from "vue";
 import http from "/@/utils/https";
 import betterScroll from "better-scroll";
 import { useRouter, useRoute } from "vue-router";
-import { useStore, mapState } from "vuex";
+import { useStore } from "vuex";
 import { arrayToHeavy } from "/@/components/common";
-import { Search } from "vant";
 import { format } from "date-fns";
-import { week } from "/@/components/date.js";
+import { week } from "/@/components/date";
+
 export default {
     name: "Cinema",
     setup() {
@@ -180,7 +180,7 @@ export default {
                 id: store.state.cityId,
                 cinemaIds: data.cinemaDateList[name],
             };
-            console.log(data.paramDate)
+            console.log(data.paramDate);
             store.dispatch("postDateList", data.paramDate);
         };
         const dropListOne = (value, list) => {
@@ -266,6 +266,7 @@ export default {
 .cinema {
     position: relative;
 }
+
 .drop {
     width: 100%;
     padding: 10px 0 0 20px;
@@ -286,37 +287,46 @@ export default {
             font-size: 13px;
             color: rgb(95, 95, 95);
         }
+
         .active {
             border: 1px solid rgb(241, 110, 110);
             color: rgb(241, 110, 110);
         }
+
         &:nth-child(4n) {
             margin-right: 0;
         }
     }
 }
+
 ul {
     width: 100%;
     overflow: hidden;
+
     li {
         padding: 15px;
         position: relative;
+
         .common {
             display: flex;
             justify-content: space-between;
             font-size: 15px;
+
             .price {
                 color: rgb(233, 163, 59);
             }
+
             .address {
                 width: 70%;
             }
         }
+
         .bottom {
             font-size: 12px;
             margin-top: 10px;
             color: rgba(105, 105, 105, 1);
         }
+
         &::after {
             content: "";
             width: 100%;

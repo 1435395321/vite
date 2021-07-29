@@ -17,9 +17,9 @@
 <script>
 import { computed, reactive, toRefs } from "vue";
 import Http from "/@/utils/https";
-import { Toast } from 'vant';
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+
 export default {
     setup() {
         const state = reactive({
@@ -42,10 +42,13 @@ export default {
             for (let i = 65; i < 91; i++) {
                 fromCode.push(String.fromCharCode(i));
             }
+            //循环26字母
             fromCode.forEach((letter) => {
+                //每一组英文字母下的值
                 let list = city.filter((item) => {
-                    return item.pinyin.substring(0, 1).toUpperCase() === letter;
+                   return  item.pinyin.substring(0, 1).toUpperCase() === letter
                 });
+                //如果字母下值不为空 数据处理 放入state
                 if (list.length > 0) {
                     state.cityList.push({
                         type: letter,
@@ -61,11 +64,11 @@ export default {
             })
         });
         // 返回记录城市
-        const hanglCity = (name,cityId) => {
+        const hanglCity = (name, cityId) => {
             const data = {
-                name,cityId
+                name, cityId
             }
-            store.commit('changCityName',data);
+            store.commit('changCityName', data);
             router.back(-1)
         }
         return {
@@ -78,7 +81,7 @@ export default {
 </script>
 
 <style lang="scss">
-    .van-toast--html, .van-toast--text{
-        min-width: 0!important;
-    }
+.van-toast--html, .van-toast--text {
+    min-width: 0 !important;
+}
 </style>
